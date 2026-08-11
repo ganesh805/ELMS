@@ -85,3 +85,31 @@ Connecting Spring Boot to MySQL via Spring Data JPA allows Hibernate to map Java
 
 ## Viva explanation
 > "In Commit 02, I connected our Spring Boot 3.3.2 application to MySQL 8.4 LTS using HikariCP. I stored database credentials securely in `application-local.properties` which is ignored by Git, ensuring zero risk of credential leaks."
+
+---
+
+# Commit 03 — feat: configure JPA entities and relationships
+
+## What I built
+- Designed and implemented 5 JPA `@Entity` classes: `User`, `LeaveType`, `LeaveBalance`, `LeaveRequest`, `Holiday`.
+- Configured `Role` (`EMPLOYEE`, `MANAGER`, `HR_ADMIN`) and `LeaveStatus` (`PENDING`, `APPROVED`, `REJECTED`, `CANCELLED`) enums.
+- Mapped self-referencing `@ManyToOne` relationship on `User.manager` pointing to direct line manager.
+- Configured unique constraints: `users.email`, `holidays.date`, `leave_types.name`, and composite unique constraint on `leave_balances(user_id, leave_type_id, year)`.
+
+## Why this feature is needed
+JPA entities define the Object-Relational Mapping (ORM) between Java object models and MySQL database tables, enabling automated schema generation and object-oriented data access.
+
+## Files created
+- [`backend/src/main/java/com/elms/entity/User.java`](file:///d:/ELMS/backend/src/main/java/com/elms/entity/User.java)
+- [`backend/src/main/java/com/elms/entity/LeaveType.java`](file:///d:/ELMS/backend/src/main/java/com/elms/entity/LeaveType.java)
+- [`backend/src/main/java/com/elms/entity/LeaveBalance.java`](file:///d:/ELMS/backend/src/main/java/com/elms/entity/LeaveBalance.java)
+- [`backend/src/main/java/com/elms/entity/LeaveRequest.java`](file:///d:/ELMS/backend/src/main/java/com/elms/entity/LeaveRequest.java)
+- [`backend/src/main/java/com/elms/entity/Holiday.java`](file:///d:/ELMS/backend/src/main/java/com/elms/entity/Holiday.java)
+- [`backend/src/main/java/com/elms/entity/enums/Role.java`](file:///d:/ELMS/backend/src/main/java/com/elms/entity/enums/Role.java)
+- [`backend/src/main/java/com/elms/entity/enums/LeaveStatus.java`](file:///d:/ELMS/backend/src/main/java/com/elms/entity/enums/LeaveStatus.java)
+
+## JPA / Hibernate concept
+**Self-Referencing Relationship (`manager_id`)**: A `@ManyToOne` relationship where an instance of `User` points to another instance of `User` representing their line manager. Root managers have `manager_id = NULL`.
+
+## Viva explanation
+> "In Commit 03, I mapped the core domain model using Jakarta Persistence annotations. I implemented a self-referencing relationship on the User entity for manager hierarchies, mapped composite unique constraints for leave balances, and let Hibernate generate foreign key constraints in MySQL."
