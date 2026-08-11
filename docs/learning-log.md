@@ -60,7 +60,28 @@ The **Layered Architecture** separates responsibilities into distinct directorie
 - **Q3: What does `@SpringBootApplication` do?**
   - *Answer*: It enables auto-configuration, component scanning, and defines the class as a configuration bean for Spring's ApplicationContext.
 
-## Mini modification exercise solution & explanation
-- **Property added**: `elms.app.environment=development` in `application.properties`
-- **Class created**: `com.elms.config.AppInfoLogger` implementing `CommandLineRunner` with `@Component` and `@Value("${elms.app.environment}")`.
-- **How it works**: When Spring Boot starts, component scanning finds `AppInfoLogger`, creates it as a Spring Bean, injects the `elms.app.environment` value, and executes `run(...)` automatically after context initialization.
+---
+
+# Commit 02 — chore: configure Java 21 Spring Boot and MySQL
+
+## What I built
+- Created local MySQL database `elms_db` in MySQL 8.4 LTS.
+- Configured HikariCP connection pool settings in `application-local.properties` (git-ignored).
+- Enabled Hibernate auto-DDL update mode (`spring.jpa.hibernate.ddl-auto=update`) for development.
+- Verified successful database connection during Spring Boot startup.
+
+## Why this feature is needed
+Connecting Spring Boot to MySQL via Spring Data JPA allows Hibernate to map Java entities directly to database tables and execute queries safely.
+
+## Files created / modified
+- [`backend/src/main/resources/application-local.properties`](file:///d:/ELMS/backend/src/main/resources/application-local.properties) (Git-ignored)
+- [`docs/learning-log.md`](file:///d:/ELMS/docs/learning-log.md)
+
+## Spring Boot & JPA concept
+**HikariCP Connection Pool**: Spring Boot's default high-performance JDBC connection pool. Instead of opening a new TCP connection for every SQL query, HikariCP reuses a pool of active database connections.
+
+## MySQL concept
+**InnoDB Storage Engine & Character Set**: MySQL 8.4 defaults to InnoDB with `utf8mb4` encoding, supporting ACID transactions, foreign key constraints, and multi-byte character sets.
+
+## Viva explanation
+> "In Commit 02, I connected our Spring Boot 3.3.2 application to MySQL 8.4 LTS using HikariCP. I stored database credentials securely in `application-local.properties` which is ignored by Git, ensuring zero risk of credential leaks."
