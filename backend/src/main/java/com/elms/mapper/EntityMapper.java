@@ -18,6 +18,7 @@ public class EntityMapper {
                 .dateOfJoining(user.getDateOfJoining())
                 .managerId(user.getManager() != null ? user.getManager().getId() : null)
                 .managerName(user.getManager() != null ? user.getManager().getFullName() : null)
+                .active(true)
                 .build();
     }
 }

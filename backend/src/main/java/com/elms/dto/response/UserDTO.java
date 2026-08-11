@@ -19,4 +19,5 @@ public class UserDTO {
     private LocalDate dateOfJoining;
     private Long managerId;
     private String managerName;
+    private Boolean active;
 }
