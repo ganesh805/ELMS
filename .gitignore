@@ -1,0 +1,32 @@
+# Target & Build directories
+target/
+**/target/
+dist/
+**/dist/
+.angular/
+**/node_modules/
+
+# IDE & Editor files
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+*.swp
+*.DS_Store
+
+# Credentials & Local Configuration (CRITICAL SECURITY)
+application-local.properties
+**/application-local.properties
+*.env
+
+# Uploaded Files & Temporary Files
+uploads/
+**/uploads/
+scratch/
+*.log
+
+# Operating System Files
+Thumbs.db
+Desktop.ini
