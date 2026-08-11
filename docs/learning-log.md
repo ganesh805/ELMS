@@ -109,7 +109,33 @@ JPA entities define the Object-Relational Mapping (ORM) between Java object mode
 - [`backend/src/main/java/com/elms/entity/enums/LeaveStatus.java`](file:///d:/ELMS/backend/src/main/java/com/elms/entity/enums/LeaveStatus.java)
 
 ## JPA / Hibernate concept
-**Self-Referencing Relationship (`manager_id`)**: A `@ManyToOne` relationship where an instance of `User` points to another instance of `User` representing their line manager. Root managers have `manager_id = NULL`.
+**Self-Referencing Entity (`manager_id`)**: A `@ManyToOne` relationship where an instance of `User` points to another instance of `User` representing their line manager. Root managers have `manager_id = NULL`.
 
 ## Viva explanation
 > "In Commit 03, I mapped the core domain model using Jakarta Persistence annotations. I implemented a self-referencing relationship on the User entity for manager hierarchies, mapped composite unique constraints for leave balances, and let Hibernate generate foreign key constraints in MySQL."
+
+---
+
+# Commit 04 — feat: add repositories and initial seed data
+
+## What I built
+- Created 5 Spring Data JPA Repositories: `UserRepository`, `LeaveTypeRepository`, `LeaveBalanceRepository`, `LeaveRequestRepository`, `HolidayRepository`.
+- Implemented `DataInitializer` bean to populate initial database seed records on application startup.
+- Created sample seed users (HR Admin, Manager, 2 Employees), 3 leave types, public holidays, annual balances for 2026, and sample leave requests (`APPROVED`, `PENDING`, `REJECTED`).
+
+## Why this feature is needed
+Repositories abstract SQL queries into clean Java methods. Seed data ensures developer and evaluator environments have realistic test data ready immediately after cloning.
+
+## Files created
+- [`backend/src/main/java/com/elms/repository/UserRepository.java`](file:///d:/ELMS/backend/src/main/java/com/elms/repository/UserRepository.java)
+- [`backend/src/main/java/com/elms/repository/LeaveTypeRepository.java`](file:///d:/ELMS/backend/src/main/java/com/elms/repository/LeaveTypeRepository.java)
+- [`backend/src/main/java/com/elms/repository/LeaveBalanceRepository.java`](file:///d:/ELMS/backend/src/main/java/com/elms/repository/LeaveBalanceRepository.java)
+- [`backend/src/main/java/com/elms/repository/LeaveRequestRepository.java`](file:///d:/ELMS/backend/src/main/java/com/elms/repository/LeaveRequestRepository.java)
+- [`backend/src/main/java/com/elms/repository/HolidayRepository.java`](file:///d:/ELMS/backend/src/main/java/com/elms/repository/HolidayRepository.java)
+- [`backend/src/main/java/com/elms/config/DataInitializer.java`](file:///d:/ELMS/backend/src/main/java/com/elms/config/DataInitializer.java)
+
+## Spring Data JPA concept
+**Derived Query Methods & JPQL `@Query`**: Spring Data JPA automatically generates SQL queries from method signatures (e.g. `findByEmail`, `findByUserIdAndYear`). For complex date range overlap conditions, explicit JPQL queries (`@Query`) are used.
+
+## Viva explanation
+> "In Commit 04, I created Spring Data JPA repositories and a DataInitializer startup component. This automatically populates seed accounts, leave categories, public holidays, yearly quotas, and sample requests so the application works out of the box."
