@@ -29,4 +29,9 @@ public class LeaveType {
     @Column(nullable = false)
     @Builder.Default
     private Boolean active = true;
+
+    // Flag indicating whether leave requests for this type require manager approval
+    @Column(name = "requires_approval", nullable = false)
+    @Builder.Default
+    private Boolean requiresApproval = true;
 }
