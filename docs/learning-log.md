@@ -139,3 +139,33 @@ Repositories abstract SQL queries into clean Java methods. Seed data ensures dev
 
 ## Viva explanation
 > "In Commit 04, I created Spring Data JPA repositories and a DataInitializer startup component. This automatically populates seed accounts, leave categories, public holidays, yearly quotas, and sample requests so the application works out of the box."
+
+---
+
+# Commit 05 — feat: implement basic user login API
+
+## What I built
+- Implemented `POST /api/auth/login` REST endpoint accepting `LoginRequestDTO` (email, password).
+- Created `AuthService` with `@Transactional(readOnly = true)` to validate user credentials and return sanitized `UserDTO`.
+- Configured `GlobalExceptionHandler` to transform custom exceptions into structured `ErrorResponseDTO` responses with standard HTTP status codes (200, 400, 404, 500).
+- Created `EntityMapper` to map entity models to DTOs without leaking sensitive password fields.
+
+## Why this feature is needed
+Implements the capstone's simplified login authentication requirement, returning user identity details (ID, name, role, manager ID) for frontend state management and API header authorization.
+
+## Files created
+- [`backend/src/main/java/com/elms/controller/AuthController.java`](file:///d:/ELMS/backend/src/main/java/com/elms/controller/AuthController.java)
+- [`backend/src/main/java/com/elms/service/AuthService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/AuthService.java)
+- [`backend/src/main/java/com/elms/dto/request/LoginRequestDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/request/LoginRequestDTO.java)
+- [`backend/src/main/java/com/elms/dto/response/UserDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/response/UserDTO.java)
+- [`backend/src/main/java/com/elms/dto/response/ErrorResponseDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/response/ErrorResponseDTO.java)
+- [`backend/src/main/java/com/elms/mapper/EntityMapper.java`](file:///d:/ELMS/backend/src/main/java/com/elms/mapper/EntityMapper.java)
+- [`backend/src/main/java/com/elms/exception/GlobalExceptionHandler.java`](file:///d:/ELMS/backend/src/main/java/com/elms/exception/GlobalExceptionHandler.java)
+- [`backend/src/main/java/com/elms/exception/ResourceNotFoundException.java`](file:///d:/ELMS/backend/src/main/java/com/elms/exception/ResourceNotFoundException.java)
+- [`backend/src/main/java/com/elms/exception/BusinessRuleException.java`](file:///d:/ELMS/backend/src/main/java/com/elms/exception/BusinessRuleException.java)
+
+## Spring Web & Exception Handling concept
+**`@RestControllerAdvice` & `@ExceptionHandler`**: Intercepts exceptions thrown across controllers and formats uniform JSON error responses rather than default HTML error pages.
+
+## Viva explanation
+> "In Commit 05, I built the authentication endpoint `POST /api/auth/login`. I used DTOs to encapsulate request payloads and response attributes, preventing sensitive entity fields like password from being exposed. I also implemented a `@RestControllerAdvice` exception handler for consistent REST error contracts."
