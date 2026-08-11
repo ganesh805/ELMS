@@ -60,5 +60,7 @@ The **Layered Architecture** separates responsibilities into distinct directorie
 - **Q3: What does `@SpringBootApplication` do?**
   - *Answer*: It enables auto-configuration, component scanning, and defines the class as a configuration bean for Spring's ApplicationContext.
 
-## Mini modification exercise
-> **Exercise**: Add a custom application property `elms.app.version=1.0.0` in `application.properties` and print it on startup using a `@Value` annotation or `CommandLineRunner`.
+## Mini modification exercise solution & explanation
+- **Property added**: `elms.app.environment=development` in `application.properties`
+- **Class created**: `com.elms.config.AppInfoLogger` implementing `CommandLineRunner` with `@Component` and `@Value("${elms.app.environment}")`.
+- **How it works**: When Spring Boot starts, component scanning finds `AppInfoLogger`, creates it as a Spring Bean, injects the `elms.app.environment` value, and executes `run(...)` automatically after context initialization.
