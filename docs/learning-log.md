@@ -198,4 +198,26 @@ Allows employees to view active leave categories, upcoming company holidays, and
 **`@RequestHeader("X-User-Id")`**: In the capstone's simplified authentication architecture, the client sends the logged-in user's ID in the `X-User-Id` request header to identify who is making the API call.
 
 ## Viva explanation
-> "In Commit 06, I built endpoints for retrieving leave categories, company holidays, and personal leave balances. I extracted user context via the `X-User-Id` request header and mapped entities to response DTOs using `@Transactional(readOnly = true)` service methods."
+> "In Commit 06, I built endpoints for retrieving leave categories, company holidays, and personal leave balances. I extracted user context via the `X-User-Id` request header and mapped entities to response DTOs using `@Transactional(readOnly = true)` service calls."
+
+---
+
+# Commit 07 — feat: implement working day calculation
+
+## What I built
+- Implemented `WorkingDayService` calculating net working leave days between start and end dates (**Business Rule 1**).
+- Excluded Saturdays, Sundays, and public holidays stored in the `Holiday` database table.
+- Created comprehensive Mockito unit tests in `WorkingDayServiceTest` covering 6 scenarios (Monday-Friday, Friday-Monday, weekends, holiday exclusions, single-day leave, invalid ranges).
+
+## Why this feature is needed
+Business Rule 1 requires that leave duration is calculated strictly as net working days, excluding weekend days and company holidays.
+
+## Files created
+- [`backend/src/main/java/com/elms/service/WorkingDayService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/WorkingDayService.java)
+- [`backend/src/test/java/com/elms/service/WorkingDayServiceTest.java`](file:///d:/ELMS/backend/src/test/java/com/elms/service/WorkingDayServiceTest.java)
+
+## Core Business Rule & Date API concept
+**`java.time.LocalDate` & `DayOfWeek`**: Iterates date range day-by-day. Checks `current.getDayOfWeek()` against `SATURDAY` / `SUNDAY` and queries DB holidays for exclusion.
+
+## Viva explanation
+> "In Commit 07, I implemented Business Rule 1 in WorkingDayService. The calculation iterates through the date interval, skipping Saturdays, Sundays, and dates present in the Holiday table. I verified this with 6 Mockito unit test cases covering edge cases."
