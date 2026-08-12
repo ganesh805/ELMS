@@ -53,7 +53,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html"
                         ).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("HR_ADMIN")
-                        .requestMatchers("/api/leaves/pending", "/api/leaves/*/approve", "/api/leaves/*/reject").hasAnyRole("MANAGER", "HR_ADMIN")
+                        .requestMatchers("/api/leaves/pending", "/api/leaves/team", "/api/leaves/*/approve", "/api/leaves/*/reject").hasAnyRole("MANAGER", "HR_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

@@ -123,6 +123,16 @@ public class LeaveRequestService {
     }
 
     @Transactional(readOnly = true)
+    public List<LeaveRequestDTO> getTeamLeaveRequestsForManager(Long managerId) {
+        if (!userRepository.existsById(managerId)) {
+            throw new ResourceNotFoundException("Manager not found with id: " + managerId);
+        }
+        return leaveRequestRepository.findByUserManagerId(managerId).stream()
+                .map(EntityMapper::toLeaveRequestDTO)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public List<LeaveRequestDTO> getAllLeaveRequests(LeaveStatus status) {
         if (status == null) {
             return leaveRequestRepository.findAll().stream()

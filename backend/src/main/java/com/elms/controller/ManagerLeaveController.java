@@ -22,6 +22,11 @@ public class ManagerLeaveController {
         return ResponseEntity.ok(leaveRequestService.getPendingApprovalsForManager(managerId));
     }
 
+    @GetMapping("/team")
+    public ResponseEntity<List<LeaveRequestDTO>> getTeamLeaveRequests(@RequestHeader("X-User-Id") Long managerId) {
+        return ResponseEntity.ok(leaveRequestService.getTeamLeaveRequestsForManager(managerId));
+    }
+
     @PutMapping("/{id}/approve")
     public ResponseEntity<LeaveRequestDTO> approveLeaveRequest(
             @PathVariable("id") Long requestId,
