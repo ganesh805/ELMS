@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -99,5 +98,23 @@ class WorkingDayServiceTest {
         LocalDate end = LocalDate.of(2026, 4, 6);
 
         assertThrows(BusinessRuleException.class, () -> workingDayService.calculateWorkingDays(start, end));
+    }
+
+    @Test
+    void testIsWorkingDay_ReturnsTrueForRegularWeekday() {
+        LocalDate monday = LocalDate.of(2026, 4, 6);
+        when(holidayRepository.existsByDate(monday)).thenReturn(false);
+
+        assertTrue(workingDayService.isWorkingDay(monday));
+    }
+
+    @Test
+    void testIsWorkingDay_ReturnsFalseForWeekendAndHoliday() {
+        LocalDate saturday = LocalDate.of(2026, 4, 11);
+        LocalDate holidayDate = LocalDate.of(2026, 4, 8);
+        when(holidayRepository.existsByDate(holidayDate)).thenReturn(true);
+
+        assertFalse(workingDayService.isWorkingDay(saturday));
+        assertFalse(workingDayService.isWorkingDay(holidayDate));
     }
 }

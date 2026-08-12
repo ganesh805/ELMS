@@ -47,4 +47,16 @@ public class WorkingDayService {
 
         return workingDays;
     }
+
+    @Transactional(readOnly = true)
+    public boolean isWorkingDay(LocalDate date) {
+        if (date == null) {
+            return false;
+        }
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+        if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
+            return false;
+        }
+        return !holidayRepository.existsByDate(date);
+    }
 }
