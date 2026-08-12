@@ -190,4 +190,34 @@ public class LeaveRequestService {
         LeaveRequest updatedRequest = leaveRequestRepository.save(request);
         return EntityMapper.toLeaveRequestDTO(updatedRequest);
     }
+
+    @Transactional
+    public LeaveRequestDTO revokeApprovedLeaveRequest(Long requestId, Long adminId, String reason) {
+        LeaveRequest request = leaveRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ResourceNotFoundException("Leave request not found with id: " + requestId));
+
+        if (request.getStatus() != LeaveStatus.APPROVED) {
+            throw new InvalidLeaveStateException("Only APPROVED leave requests can be revoked");
+        }
+
+        User admin = userRepository.findById(adminId)
+                .orElseThrow(() -> new ResourceNotFoundException("Admin user not found with id: " + adminId));
+
+        int leaveYear = request.getStartDate().getYear();
+        LeaveBalance balance = leaveBalanceRepository.findByUserIdAndLeaveTypeIdAndYear(
+                request.getUser().getId(), request.getLeaveType().getId(), leaveYear)
+                .orElseThrow(() -> new BusinessRuleException("No leave balance record found for user in year " + leaveYear));
+
+        balance.setUsed(Math.max(0, balance.getUsed() - request.getNumberOfDays()));
+        balance.setRemaining(balance.getAllocated() - balance.getUsed());
+        leaveBalanceRepository.save(balance);
+
+        request.setStatus(LeaveStatus.CANCELLED);
+        request.setApprover(admin);
+        request.setDecisionComment("Revoked by Admin: " + (reason != null ? reason : ""));
+        request.setDecisionDate(LocalDateTime.now());
+
+        LeaveRequest updatedRequest = leaveRequestRepository.save(request);
+        return EntityMapper.toLeaveRequestDTO(updatedRequest);
+    }
 }

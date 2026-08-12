@@ -179,4 +179,33 @@ class LeaveRequestServiceTest {
         assertEquals(10, sampleBalance.getRemaining());
         verify(leaveBalanceRepository).save(sampleBalance);
     }
+
+    @Test
+    void testRevokeApprovedLeaveRequest_RecreditsBalanceAndCancels() {
+        LeaveRequest approvedRequest = LeaveRequest.builder()
+                .id(10L)
+                .user(sampleUser)
+                .leaveType(sampleLeaveType)
+                .startDate(LocalDate.of(2026, 10, 5))
+                .endDate(LocalDate.of(2026, 10, 9))
+                .numberOfDays(5)
+                .status(LeaveStatus.APPROVED)
+                .build();
+
+        sampleBalance.setUsed(8);
+        sampleBalance.setRemaining(10);
+
+        when(leaveRequestRepository.findById(10L)).thenReturn(Optional.of(approvedRequest));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(sampleApprover));
+        when(leaveBalanceRepository.findByUserIdAndLeaveTypeIdAndYear(1L, 1L, 2026))
+                .thenReturn(Optional.of(sampleBalance));
+        when(leaveRequestRepository.save(any(LeaveRequest.class))).thenAnswer(i -> i.getArgument(0));
+
+        LeaveRequestDTO result = leaveRequestService.revokeApprovedLeaveRequest(10L, 2L, "Administrative revocation");
+
+        assertEquals(LeaveStatus.CANCELLED, result.getStatus());
+        assertEquals(3, sampleBalance.getUsed());
+        assertEquals(15, sampleBalance.getRemaining());
+        verify(leaveBalanceRepository).save(sampleBalance);
+    }
 }
