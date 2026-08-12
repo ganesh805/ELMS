@@ -34,4 +34,12 @@ public class EmployeeLeaveController {
             @RequestParam(name = "status", required = false) LeaveStatus status) {
         return ResponseEntity.ok(leaveRequestService.getMyLeaveRequests(userId, status));
     }
+
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<LeaveRequestDTO> cancelLeaveRequest(
+            @PathVariable("id") Long requestId,
+            @RequestHeader("X-User-Id") Long userId) {
+        LeaveRequestDTO cancelledRequest = leaveRequestService.cancelLeaveRequest(requestId, userId);
+        return ResponseEntity.ok(cancelledRequest);
+    }
 }

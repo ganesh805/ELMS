@@ -9,6 +9,7 @@ import com.elms.entity.User;
 import com.elms.entity.enums.LeaveStatus;
 import com.elms.exception.BusinessRuleException;
 import com.elms.exception.InsufficientLeaveBalanceException;
+import com.elms.exception.InvalidLeaveStateException;
 import com.elms.exception.ResourceNotFoundException;
 import com.elms.mapper.EntityMapper;
 import com.elms.repository.LeaveBalanceRepository;
@@ -105,5 +106,75 @@ public class LeaveRequestService {
         return leaveRequestRepository.findByUserIdAndStatus(userId, status).stream()
                 .map(EntityMapper::toLeaveRequestDTO)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<LeaveRequestDTO> getPendingApprovalsForManager(Long managerId) {
+        if (!userRepository.existsById(managerId)) {
+            throw new ResourceNotFoundException("Manager not found with id: " + managerId);
+        }
+        return leaveRequestRepository.findByUserManagerIdAndStatus(managerId, LeaveStatus.PENDING).stream()
+                .map(EntityMapper::toLeaveRequestDTO)
+                .toList();
+    }
+
+    @Transactional
+    public LeaveRequestDTO approveLeaveRequest(Long requestId, Long approverId, String decisionComment) {
+        LeaveRequest request = leaveRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ResourceNotFoundException("Leave request not found with id: " + requestId));
+
+        if (request.getStatus() != LeaveStatus.PENDING) {
+            throw new InvalidLeaveStateException("Only PENDING leave requests can be approved");
+        }
+
+        User approver = userRepository.findById(approverId)
+                .orElseThrow(() -> new ResourceNotFoundException("Approver user not found with id: " + approverId));
+
+        request.setStatus(LeaveStatus.APPROVED);
+        request.setApprover(approver);
+        request.setDecisionComment(decisionComment);
+        request.setDecisionDate(LocalDateTime.now());
+
+        LeaveRequest updatedRequest = leaveRequestRepository.save(request);
+        return EntityMapper.toLeaveRequestDTO(updatedRequest);
+    }
+
+    @Transactional
+    public LeaveRequestDTO rejectLeaveRequest(Long requestId, Long approverId, String decisionComment) {
+        LeaveRequest request = leaveRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ResourceNotFoundException("Leave request not found with id: " + requestId));
+
+        if (request.getStatus() != LeaveStatus.PENDING) {
+            throw new InvalidLeaveStateException("Only PENDING leave requests can be rejected");
+        }
+
+        User approver = userRepository.findById(approverId)
+                .orElseThrow(() -> new ResourceNotFoundException("Approver user not found with id: " + approverId));
+
+        request.setStatus(LeaveStatus.REJECTED);
+        request.setApprover(approver);
+        request.setDecisionComment(decisionComment);
+        request.setDecisionDate(LocalDateTime.now());
+
+        LeaveRequest updatedRequest = leaveRequestRepository.save(request);
+        return EntityMapper.toLeaveRequestDTO(updatedRequest);
+    }
+
+    @Transactional
+    public LeaveRequestDTO cancelLeaveRequest(Long requestId, Long userId) {
+        LeaveRequest request = leaveRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ResourceNotFoundException("Leave request not found with id: " + requestId));
+
+        if (!request.getUser().getId().equals(userId)) {
+            throw new BusinessRuleException("You are not authorized to cancel this leave request");
+        }
+
+        if (request.getStatus() != LeaveStatus.PENDING) {
+            throw new InvalidLeaveStateException("Only PENDING leave requests can be cancelled");
+        }
+
+        request.setStatus(LeaveStatus.CANCELLED);
+        LeaveRequest updatedRequest = leaveRequestRepository.save(request);
+        return EntityMapper.toLeaveRequestDTO(updatedRequest);
     }
 }

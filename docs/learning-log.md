@@ -296,3 +296,30 @@ Business Rule 3 ensures an employee cannot request more leave days than their re
 
 ## Viva explanation
 > "In Commit 10, I implemented Business Rule 3 to validate leave balances before request submission. The service fetches the employee's LeaveBalance for the target year and throws an InsufficientLeaveBalanceException if requested days exceed remaining quota."
+
+---
+
+# Commit 11 — feat: implement leave approval rejection and cancellation
+
+## What I built
+- Created `DecisionRequestDTO` and `InvalidLeaveStateException`.
+- Implemented approval (`approveLeaveRequest`), rejection (`rejectLeaveRequest`), and cancellation (`cancelLeaveRequest`) service methods in `LeaveRequestService`.
+- Created `ManagerLeaveController` exposing `GET /api/leaves/pending`, `PUT /api/leaves/{id}/approve`, and `PUT /api/leaves/{id}/reject`.
+- Added `PUT /api/leaves/{id}/cancel` in `EmployeeLeaveController`.
+- Enforced **Rule 6 State Machine**: state transitions are allowed strictly from `PENDING` state.
+
+## Why this feature is needed
+Enables direct line managers to review, approve, or reject pending leave requests submitted by team members, and allows employees to cancel their pending applications.
+
+## Files created / modified
+- [`backend/src/main/java/com/elms/dto/request/DecisionRequestDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/request/DecisionRequestDTO.java)
+- [`backend/src/main/java/com/elms/exception/InvalidLeaveStateException.java`](file:///d:/ELMS/backend/src/main/java/com/elms/exception/InvalidLeaveStateException.java)
+- [`backend/src/main/java/com/elms/controller/ManagerLeaveController.java`](file:///d:/ELMS/backend/src/main/java/com/elms/controller/ManagerLeaveController.java)
+- [`backend/src/main/java/com/elms/controller/EmployeeLeaveController.java`](file:///d:/ELMS/backend/src/main/java/com/elms/controller/EmployeeLeaveController.java)
+- [`backend/src/main/java/com/elms/service/LeaveRequestService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/LeaveRequestService.java)
+
+## State Machine concept
+**State Transition Integrity (Rule 6)**: Only requests in the `PENDING` state can transition to `APPROVED`, `REJECTED`, or `CANCELLED`. Once a request transitions out of `PENDING`, its state is final.
+
+## Viva explanation
+> "In Commit 11, I implemented the leave approval workflow and state transitions. Managers can retrieve pending team requests and submit decision comments to approve or reject them. Employees can cancel pending requests. All transitions enforce Rule 6, rejecting state changes on non-pending requests."
