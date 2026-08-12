@@ -1,13 +1,7 @@
 package com.elms.mapper;
 
-import com.elms.dto.response.HolidayDTO;
-import com.elms.dto.response.LeaveBalanceDTO;
-import com.elms.dto.response.LeaveTypeDTO;
-import com.elms.dto.response.UserDTO;
-import com.elms.entity.Holiday;
-import com.elms.entity.LeaveBalance;
-import com.elms.entity.LeaveType;
-import com.elms.entity.User;
+import com.elms.dto.response.*;
+import com.elms.entity.*;
 
 public class EntityMapper {
 
@@ -68,6 +62,30 @@ public class EntityMapper {
                 .allocated(balance.getAllocated())
                 .used(balance.getUsed())
                 .remaining(balance.getRemaining())
+                .build();
+    }
+
+    public static LeaveRequestDTO toLeaveRequestDTO(LeaveRequest request) {
+        if (request == null) {
+            return null;
+        }
+        return LeaveRequestDTO.builder()
+                .id(request.getId())
+                .userId(request.getUser() != null ? request.getUser().getId() : null)
+                .userName(request.getUser() != null ? request.getUser().getFullName() : null)
+                .leaveTypeId(request.getLeaveType() != null ? request.getLeaveType().getId() : null)
+                .leaveTypeName(request.getLeaveType() != null ? request.getLeaveType().getName() : null)
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .numberOfDays(request.getNumberOfDays())
+                .reason(request.getReason())
+                .status(request.getStatus())
+                .attachmentFileName(request.getAttachmentFileName())
+                .appliedOn(request.getAppliedOn())
+                .approverId(request.getApprover() != null ? request.getApprover().getId() : null)
+                .approverName(request.getApprover() != null ? request.getApprover().getFullName() : null)
+                .decisionComment(request.getDecisionComment())
+                .decisionDate(request.getDecisionDate())
                 .build();
     }
 }

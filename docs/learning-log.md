@@ -221,3 +221,29 @@ Business Rule 1 requires that leave duration is calculated strictly as net worki
 
 ## Viva explanation
 > "In Commit 07, I implemented Business Rule 1 in WorkingDayService. The calculation iterates through the date interval, skipping Saturdays, Sundays, and dates present in the Holiday table. I verified this with 6 Mockito unit test cases covering edge cases."
+
+---
+
+# Commit 08 — feat: implement leave request creation and validation
+
+## What I built
+- Implemented `POST /api/leaves` and `GET /api/leaves/my` REST endpoints in `EmployeeLeaveController`.
+- Created `LeaveCreateDTO` with Bean Validation constraints (`@FutureOrPresent`, `@NotNull`, `@NotBlank`).
+- Implemented `LeaveRequestService.createLeaveRequest(...)` integrating `WorkingDayService` for automatic working days calculation.
+- Enforced date range validations (**Rule 4 & 5**: `endDate >= startDate` and `startDate >= today`).
+- Added `LeaveRequestDTO` mapping method in `EntityMapper`.
+
+## Why this feature is needed
+Enables employees to apply for leave with automatic working day calculation and retrieve their personal leave application history.
+
+## Files created
+- [`backend/src/main/java/com/elms/controller/EmployeeLeaveController.java`](file:///d:/ELMS/backend/src/main/java/com/elms/controller/EmployeeLeaveController.java)
+- [`backend/src/main/java/com/elms/service/LeaveRequestService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/LeaveRequestService.java)
+- [`backend/src/main/java/com/elms/dto/request/LeaveCreateDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/request/LeaveCreateDTO.java)
+- [`backend/src/main/java/com/elms/dto/response/LeaveRequestDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/response/LeaveRequestDTO.java)
+
+## Spring Web & Transactional concept
+**`@Transactional` Mutation Methods**: Service method creates and persists new `LeaveRequest` entities with initial `PENDING` status and sets `appliedOn` timestamp automatically.
+
+## Viva explanation
+> "In Commit 08, I built the leave submission endpoint `POST /api/leaves` and personal history endpoint `GET /api/leaves/my`. The service validates date ranges, injects WorkingDayService to compute net requested days, and saves requests with PENDING status."
