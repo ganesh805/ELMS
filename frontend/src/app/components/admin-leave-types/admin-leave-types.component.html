@@ -1,0 +1,173 @@
+<div class="admin-leave-types-wrapper">
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    ⚠️ {{ errorMessage }}
+  </div>
+
+  <div class="alert alert-success" *ngIf="successMessage">
+    ✅ {{ successMessage }}
+  </div>
+
+  <!-- Leave Types Section -->
+  <div class="glass-card page-card">
+    <div class="page-header">
+      <div>
+        <h2>Leave Categories & Quotas ⚙️</h2>
+        <p class="subtitle">Configure active company leave policies and annual quotas</p>
+      </div>
+      <button class="btn btn-primary" (click)="openCreateLeaveTypeModal()">+ Add Category</button>
+    </div>
+
+    <div class="table-container" *ngIf="leaveTypes.length > 0">
+      <table class="glass-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Category Name</th>
+            <th>Default Annual Quota</th>
+            <th>Approval Required</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let type of leaveTypes">
+            <td>#{{ type.id }}</td>
+            <td>
+              <div><strong>{{ type.name }}</strong></div>
+              <small class="text-muted">{{ type.description || 'No description' }}</small>
+            </td>
+            <td><strong>{{ type.defaultAnnualQuota }} Days/Year</strong></td>
+            <td>
+              <span class="badge" [ngClass]="type.requiresApproval ? 'badge-pending' : 'badge-approved'">
+                {{ type.requiresApproval ? 'YES' : 'AUTO-APPROVE' }}
+              </span>
+            </td>
+            <td>
+              <span class="badge" [ngClass]="type.active ? 'badge-approved' : 'badge-rejected'">
+                {{ type.active ? 'ACTIVE' : 'INACTIVE' }}
+              </span>
+            </td>
+            <td>
+              <button *ngIf="type.active" class="btn btn-danger btn-xs" (click)="deleteLeaveType(type.id)">
+                Deactivate 🚫
+              </button>
+              <span *ngIf="!type.active" class="text-muted">-</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Public Holidays Section -->
+  <div class="glass-card page-card">
+    <div class="page-header">
+      <div>
+        <h2>Company Public Holidays 🗓️</h2>
+        <p class="subtitle">Public holidays automatically deducted during working day calculations</p>
+      </div>
+      <button class="btn btn-secondary" (click)="openCreateHolidayModal()">+ Add Public Holiday</button>
+    </div>
+
+    <div class="table-container" *ngIf="holidays.length > 0">
+      <table class="glass-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Holiday Date</th>
+            <th>Holiday Name</th>
+            <th>Description</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let holiday of holidays">
+            <td>#{{ holiday.id }}</td>
+            <td><strong>{{ holiday.date }}</strong></td>
+            <td>{{ holiday.name }}</td>
+            <td><span class="text-muted">{{ holiday.description || 'Company Holiday' }}</span></td>
+            <td>
+              <button class="btn btn-danger btn-xs" (click)="deleteHoliday(holiday.id)">
+                Delete 🗑️
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Create Leave Type Modal -->
+<div class="modal-overlay" *ngIf="showLeaveTypeModal">
+  <div class="modal-card glass-card">
+    <div class="modal-header">
+      <h3>Create Leave Category</h3>
+      <button class="close-btn" (click)="closeLeaveTypeModal()">✖</button>
+    </div>
+
+    <form (ngSubmit)="saveLeaveType()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Category Name</label>
+          <input type="text" class="form-control" [(ngModel)]="newLeaveType.name" name="name" placeholder="e.g. Maternity Leave" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Default Annual Quota (Days)</label>
+          <input type="number" class="form-control" [(ngModel)]="newLeaveType.defaultAnnualQuota" name="defaultAnnualQuota" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" rows="2" [(ngModel)]="newLeaveType.description" name="description"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeLeaveTypeModal()" [disabled]="isSaving">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSaving">
+          <span *ngIf="!isSaving">Save Leave Category ⚙️</span>
+          <span *ngIf="isSaving">Saving...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Create Holiday Modal -->
+<div class="modal-overlay" *ngIf="showHolidayModal">
+  <div class="modal-card glass-card">
+    <div class="modal-header">
+      <h3>Register Public Holiday</h3>
+      <button class="close-btn" (click)="closeHolidayModal()">✖</button>
+    </div>
+
+    <form (ngSubmit)="saveHoliday()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Holiday Date</label>
+          <input type="date" class="form-control" [(ngModel)]="newHoliday.date" name="date" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Holiday Name</label>
+          <input type="text" class="form-control" [(ngModel)]="newHoliday.name" name="name" placeholder="e.g. Christmas Day" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <input type="text" class="form-control" [(ngModel)]="newHoliday.description" name="description">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeHolidayModal()" [disabled]="isSaving">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSaving">
+          <span *ngIf="!isSaving">Register Holiday 🗓️</span>
+          <span *ngIf="isSaving">Registering...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

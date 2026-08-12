@@ -669,3 +669,30 @@ Enables managers to process pending leave applications, enforce project workload
 
 ## Viva explanation
 > "In Commit 24, I built the PendingApprovalsComponent for line managers. Managers can view pending applications from direct report team members, open a decision modal to write feedback comments, and approve or reject applications."
+
+---
+
+# Commit 25 — feat: implement hr admin views
+
+## What I built
+- Built standalone `AdminUsersComponent` for HR Admin user account management, role assignment, and manual leave balance quota adjustments.
+- Built standalone `AdminLeaveTypesComponent` for leave category policy configuration and public holiday registrations.
+- Configured `/admin/users` and `/admin/leave-types` routes in `app.routes.ts`.
+
+## Why this feature is needed
+Provides HR Administrators with complete visual control over system users, manager assignments, yearly quota overrides, leave category policies, and public holiday calendars.
+
+## Files created / modified
+- [`frontend/src/app/components/admin-users/admin-users.component.ts`](file:///d:/ELMS/frontend/src/app/components/admin-users/admin-users.component.ts)
+- [`frontend/src/app/components/admin-users/admin-users.component.html`](file:///d:/ELMS/frontend/src/app/components/admin-users/admin-users.component.html)
+- [`frontend/src/app/components/admin-users/admin-users.component.css`](file:///d:/ELMS/frontend/src/app/components/admin-users/admin-users.component.css)
+- [`frontend/src/app/components/admin-leave-types/admin-leave-types.component.ts`](file:///d:/ELMS/frontend/src/app/components/admin-leave-types/admin-leave-types.component.ts)
+- [`frontend/src/app/components/admin-leave-types/admin-leave-types.component.html`](file:///d:/ELMS/frontend/src/app/components/admin-leave-types/admin-leave-types.component.html)
+- [`frontend/src/app/components/admin-leave-types/admin-leave-types.component.css`](file:///d:/ELMS/frontend/src/app/components/admin-leave-types/admin-leave-types.component.css)
+- [`frontend/src/app/app.routes.ts`](file:///d:/ELMS/frontend/src/app/app.routes.ts)
+
+## Administrative Control UI concept
+**HR Admin Control Panel**: Provides complete administrative CRUD capabilities over users, manager assignments, quota overrides, soft-deletable leave categories, and public holiday calendars.
+
+## Viva explanation
+> "In Commit 25, I built the HR Admin views (AdminUsersComponent and AdminLeaveTypesComponent). These components allow HR Administrators to manage employee accounts, assign line managers, override leave quotas, configure leave category policies, and register company public holidays."

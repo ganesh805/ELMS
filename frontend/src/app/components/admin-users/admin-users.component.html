@@ -1,0 +1,180 @@
+<div class="admin-users-wrapper">
+  <div class="glass-card page-card">
+    <div class="page-header">
+      <div>
+        <h2>User Management & Quotas 👥</h2>
+        <p class="subtitle">Create user accounts, assign line managers, and adjust annual leave balances</p>
+      </div>
+      <button class="btn btn-primary" (click)="openCreateUserModal()">+ Add New User</button>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      ⚠️ {{ errorMessage }}
+    </div>
+
+    <div class="alert alert-success" *ngIf="successMessage">
+      ✅ {{ successMessage }}
+    </div>
+
+    <div class="table-container" *ngIf="users.length > 0">
+      <table class="glass-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>User Details</th>
+            <th>Role</th>
+            <th>Department</th>
+            <th>Line Manager</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>#{{ user.id }}</td>
+            <td>
+              <div><strong>{{ user.fullName }}</strong></div>
+              <small class="text-muted">{{ user.email }}</small>
+            </td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'badge-approved': user.role === 'HR_ADMIN',
+                'badge-pending': user.role === 'MANAGER',
+                'badge-cancelled': user.role === 'EMPLOYEE'
+              }">{{ user.role }}</span>
+            </td>
+            <td>{{ user.department || 'General' }}</td>
+            <td>
+              <span *ngIf="user.managerName">{{ user.managerName }}</span>
+              <span *ngIf="!user.managerName" class="text-muted">None (Root)</span>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-secondary btn-xs" (click)="openEditUserModal(user)">
+                  ✏️ Edit User
+                </button>
+                <button class="btn btn-primary btn-xs" (click)="openAdjustBalanceModal(user)">
+                  💳 Adjust Balance
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="empty-state" *ngIf="users.length === 0 && !isLoading">
+      <p>No user accounts found.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Create / Edit User Modal -->
+<div class="modal-overlay" *ngIf="showUserModal">
+  <div class="modal-card glass-card">
+    <div class="modal-header">
+      <h3>{{ editingUser ? 'Edit User Account' : 'Create New User Account' }}</h3>
+      <button class="close-btn" (click)="closeUserModal()">✖</button>
+    </div>
+
+    <form (ngSubmit)="saveUser()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" [(ngModel)]="newUser.fullName" name="fullName" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-control" [(ngModel)]="newUser.email" name="email" required>
+        </div>
+
+        <div class="form-group" *ngIf="!editingUser">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" [(ngModel)]="newUser.password" name="password" placeholder="Default password" required>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Role</label>
+            <select class="form-control" [(ngModel)]="newUser.role" name="role">
+              <option value="EMPLOYEE">EMPLOYEE</option>
+              <option value="MANAGER">MANAGER</option>
+              <option value="HR_ADMIN">HR_ADMIN</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Department</label>
+            <input type="text" class="form-control" [(ngModel)]="newUser.department" name="department">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Line Manager</label>
+          <select class="form-control" [(ngModel)]="newUser.managerId" name="managerId">
+            <option [ngValue]="null">-- None (Root Manager) --</option>
+            <option *ngFor="let mgr of managers" [ngValue]="mgr.id">
+              {{ mgr.fullName }} ({{ mgr.role }})
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeUserModal()" [disabled]="isSaving">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSaving">
+          <span *ngIf="!isSaving">Save User Account 💾</span>
+          <span *ngIf="isSaving">Saving...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Adjust Balance Modal -->
+<div class="modal-overlay" *ngIf="showBalanceModal && adjustTargetUser">
+  <div class="modal-card glass-card">
+    <div class="modal-header">
+      <h3>Adjust Quota: {{ adjustTargetUser.fullName }}</h3>
+      <button class="close-btn" (click)="closeBalanceModal()">✖</button>
+    </div>
+
+    <form (ngSubmit)="saveBalanceAdjustment()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Leave Category</label>
+          <select class="form-control" [(ngModel)]="adjustData.leaveTypeId" name="leaveTypeId">
+            <option [value]="1">Annual Leave</option>
+            <option [value]="2">Sick Leave</option>
+            <option [value]="3">Casual Leave</option>
+          </select>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Year</label>
+            <input type="number" class="form-control" [(ngModel)]="adjustData.year" name="year" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">New Allocated Quota (Days)</label>
+            <input type="number" class="form-control" [(ngModel)]="adjustData.newAllocatedQuota" name="newAllocatedQuota" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Adjustment Reason</label>
+          <input type="text" class="form-control" [(ngModel)]="adjustData.reason" name="reason" placeholder="Reason for HR balance override">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeBalanceModal()" [disabled]="isSaving">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSaving">
+          <span *ngIf="!isSaving">Update Balance 💳</span>
+          <span *ngIf="isSaving">Updating...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
