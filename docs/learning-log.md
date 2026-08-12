@@ -169,3 +169,33 @@ Implements the capstone's simplified login authentication requirement, returning
 
 ## Viva explanation
 > "In Commit 05, I built the authentication endpoint `POST /api/auth/login`. I used DTOs to encapsulate request payloads and response attributes, preventing sensitive entity fields like password from being exposed. I also implemented a `@RestControllerAdvice` exception handler for consistent REST error contracts."
+
+---
+
+# Commit 06 — feat: implement leave types holidays and balances
+
+## What I built
+- Implemented REST endpoints for Leave Types (`GET /api/leave-types`), Public Holidays (`GET /api/holidays`, `GET /api/holidays/upcoming`), and Leave Balances (`GET /api/leave-balances/my`).
+- Implemented `LeaveTypeService`, `HolidayService`, and `LeaveBalanceService`.
+- Used `@RequestHeader("X-User-Id")` in `LeaveBalanceController` to extract acting user identity.
+- Added mapping methods in `EntityMapper` for `LeaveTypeDTO`, `HolidayDTO`, and `LeaveBalanceDTO`.
+
+## Why this feature is needed
+Allows employees to view active leave categories, upcoming company holidays, and their personal leave balance quotas for the current year.
+
+## Files created
+- [`backend/src/main/java/com/elms/controller/LeaveTypeController.java`](file:///d:/ELMS/backend/src/main/java/com/elms/controller/LeaveTypeController.java)
+- [`backend/src/main/java/com/elms/controller/HolidayController.java`](file:///d:/ELMS/backend/src/main/java/com/elms/controller/HolidayController.java)
+- [`backend/src/main/java/com/elms/controller/LeaveBalanceController.java`](file:///d:/ELMS/backend/src/main/java/com/elms/controller/LeaveBalanceController.java)
+- [`backend/src/main/java/com/elms/service/LeaveTypeService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/LeaveTypeService.java)
+- [`backend/src/main/java/com/elms/service/HolidayService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/HolidayService.java)
+- [`backend/src/main/java/com/elms/service/LeaveBalanceService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/LeaveBalanceService.java)
+- [`backend/src/main/java/com/elms/dto/response/LeaveTypeDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/response/LeaveTypeDTO.java)
+- [`backend/src/main/java/com/elms/dto/response/HolidayDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/response/HolidayDTO.java)
+- [`backend/src/main/java/com/elms/dto/response/LeaveBalanceDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/response/LeaveBalanceDTO.java)
+
+## Spring Web & Header authorization concept
+**`@RequestHeader("X-User-Id")`**: In the capstone's simplified authentication architecture, the client sends the logged-in user's ID in the `X-User-Id` request header to identify who is making the API call.
+
+## Viva explanation
+> "In Commit 06, I built endpoints for retrieving leave categories, company holidays, and personal leave balances. I extracted user context via the `X-User-Id` request header and mapped entities to response DTOs using `@Transactional(readOnly = true)` service methods."
