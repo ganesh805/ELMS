@@ -71,11 +71,16 @@ public class LeaveRequestService {
     }
 
     @Transactional(readOnly = true)
-    public List<LeaveRequestDTO> getMyLeaveRequests(Long userId) {
+    public List<LeaveRequestDTO> getMyLeaveRequests(Long userId, LeaveStatus status) {
         if (!userRepository.existsById(userId)) {
             throw new ResourceNotFoundException("User not found with id: " + userId);
         }
-        return leaveRequestRepository.findByUserId(userId).stream()
+        if (status == null) {
+            return leaveRequestRepository.findByUserId(userId).stream()
+                    .map(EntityMapper::toLeaveRequestDTO)
+                    .toList();
+        }
+        return leaveRequestRepository.findByUserIdAndStatus(userId, status).stream()
                 .map(EntityMapper::toLeaveRequestDTO)
                 .toList();
     }

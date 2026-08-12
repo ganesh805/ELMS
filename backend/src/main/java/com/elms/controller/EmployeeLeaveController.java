@@ -2,6 +2,7 @@ package com.elms.controller;
 
 import com.elms.dto.request.LeaveCreateDTO;
 import com.elms.dto.response.LeaveRequestDTO;
+import com.elms.entity.enums.LeaveStatus;
 import com.elms.service.LeaveRequestService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,9 @@ public class EmployeeLeaveController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<LeaveRequestDTO>> getMyLeaveRequests(@RequestHeader("X-User-Id") Long userId) {
-        return ResponseEntity.ok(leaveRequestService.getMyLeaveRequests(userId));
+    public ResponseEntity<List<LeaveRequestDTO>> getMyLeaveRequests(
+            @RequestHeader("X-User-Id") Long userId,
+            @RequestParam(name = "status", required = false) LeaveStatus status) {
+        return ResponseEntity.ok(leaveRequestService.getMyLeaveRequests(userId, status));
     }
 }
