@@ -49,6 +49,14 @@ public class LeaveRequestService {
             throw new BusinessRuleException("Start date cannot be in the past");
         }
 
+        List<LeaveStatus> activeStatuses = List.of(LeaveStatus.PENDING, LeaveStatus.APPROVED);
+        List<LeaveRequest> overlappingRequests = leaveRequestRepository.findOverlappingRequests(
+                userId, dto.getStartDate(), dto.getEndDate(), activeStatuses);
+
+        if (!overlappingRequests.isEmpty()) {
+            throw new BusinessRuleException("Selected leave dates overlap with an existing PENDING or APPROVED leave request");
+        }
+
         int workingDays = workingDayService.calculateWorkingDays(dto.getStartDate(), dto.getEndDate());
         if (workingDays == 0) {
             throw new BusinessRuleException("Selected date range contains no working days (weekends or public holidays)");

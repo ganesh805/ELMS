@@ -247,3 +247,26 @@ Enables employees to apply for leave with automatic working day calculation and 
 
 ## Viva explanation
 > "In Commit 08, I built the leave submission endpoint `POST /api/leaves` and personal history endpoint `GET /api/leaves/my`. The service validates date ranges, injects WorkingDayService to compute net requested days, and saves requests with PENDING status."
+
+---
+
+# Commit 09 — feat: implement leave overlap validation
+
+## What I built
+- Implemented **Business Rule 2** (Leave Overlap Validation) in `LeaveRequestService`.
+- Checked for overlapping `PENDING` or `APPROVED` leave requests for the employee using `leaveRequestRepository.findOverlappingRequests(...)`.
+- Throws `BusinessRuleException` if an overlap is detected.
+- Added unit tests in `LeaveRequestServiceTest` covering overlap scenarios.
+
+## Why this feature is needed
+Business Rule 2 strictly forbids double-booking leave dates for an employee if an existing request is pending or approved.
+
+## Files modified / created
+- [`backend/src/main/java/com/elms/service/LeaveRequestService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/LeaveRequestService.java)
+- [`backend/src/test/java/com/elms/service/LeaveRequestServiceTest.java`](file:///d:/ELMS/backend/src/test/java/com/elms/service/LeaveRequestServiceTest.java)
+
+## Core Business Rule & Overlap Math concept
+**Interval Overlap Principle**: Two intervals `[S1, E1]` and `[S2, E2]` overlap if and only if `(S1 <= E2 AND E1 >= S2)`.
+
+## Viva explanation
+> "In Commit 09, I implemented Business Rule 2 to prevent leave overlaps. The query checks if any PENDING or APPROVED request overlaps with the requested start and end dates. If found, a BusinessRuleException is thrown."
