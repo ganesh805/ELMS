@@ -506,3 +506,30 @@ Initializes the Single Page Application (SPA) frontend project structure, establ
 
 ## Viva explanation
 > "In Commit 18, I initialized the Angular 17 frontend workspace. I set up environment configuration files pointing to our Spring Boot backend at http://localhost:8080/api and enabled provideHttpClient in app.config.ts for REST communication."
+
+---
+
+# Commit 19 — feat: create angular design system and layout components
+
+## What I built
+- Designed global CSS design system in `styles.css` using modern glassmorphism aesthetic, dark theme palette, status badge utilities, custom buttons, forms, and table styles.
+- Built standalone `NavbarComponent` (`app-navbar`) displaying brand logo, user profile, role badge, and logout action.
+- Built standalone `SidebarComponent` (`app-sidebar`) rendering dynamic navigation links based on user role (`EMPLOYEE`, `MANAGER`, `HR_ADMIN`).
+
+## Why this feature is needed
+Establishes the core UI theme, global styles, and responsive navigation shell for the entire ELMS Angular single-page application.
+
+## Files created
+- [`frontend/src/styles.css`](file:///d:/ELMS/frontend/src/styles.css)
+- [`frontend/src/app/components/navbar/navbar.component.ts`](file:///d:/ELMS/frontend/src/app/components/navbar/navbar.component.ts)
+- [`frontend/src/app/components/navbar/navbar.component.html`](file:///d:/ELMS/frontend/src/app/components/navbar/navbar.component.html)
+- [`frontend/src/app/components/navbar/navbar.component.css`](file:///d:/ELMS/frontend/src/app/components/navbar/navbar.component.css)
+- [`frontend/src/app/components/sidebar/sidebar.component.ts`](file:///d:/ELMS/frontend/src/app/components/sidebar/sidebar.component.ts)
+- [`frontend/src/app/components/sidebar/sidebar.component.html`](file:///d:/ELMS/frontend/src/app/components/sidebar/sidebar.component.html)
+- [`frontend/src/app/components/sidebar/sidebar.component.css`](file:///d:/ELMS/frontend/src/app/components/sidebar/sidebar.component.css)
+
+## Glassmorphism UI & Role-Based Navigation concept
+**Modern Glassmorphism & Conditional Navigation**: Uses CSS `backdrop-filter: blur(...)` and semi-transparent layers for high visual quality. The sidebar uses Angular `*ngIf="role === 'HR_ADMIN'"` directives to display administration menus conditionally.
+
+## Viva explanation
+> "In Commit 19, I built the Angular design system and layout shell components. I created a dark-mode glassmorphism design system in styles.css and implemented Navbar and Sidebar components with dynamic role-based navigation menus."

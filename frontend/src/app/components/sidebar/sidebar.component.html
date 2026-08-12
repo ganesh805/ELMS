@@ -1,0 +1,37 @@
+<aside class="sidebar-container glass-card">
+  <nav class="nav-list">
+    <div class="nav-section-title">Navigation</div>
+    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">📊</span>
+      <span>Dashboard</span>
+    </a>
+    <a routerLink="/apply-leave" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">📝</span>
+      <span>Apply Leave</span>
+    </a>
+    <a routerLink="/my-leaves" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">📋</span>
+      <span>My Leave History</span>
+    </a>
+
+    <ng-container *ngIf="role === 'MANAGER' || role === 'HR_ADMIN'">
+      <div class="nav-section-title">Management</div>
+      <a routerLink="/pending-approvals" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">⏳</span>
+        <span>Pending Approvals</span>
+      </a>
+    </ng-container>
+
+    <ng-container *ngIf="role === 'HR_ADMIN'">
+      <div class="nav-section-title">HR Administration</div>
+      <a routerLink="/admin/users" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">👥</span>
+        <span>User Management</span>
+      </a>
+      <a routerLink="/admin/leave-types" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">⚙️</span>
+        <span>Leave Types & Quotas</span>
+      </a>
+    </ng-container>
+  </nav>
+</aside>

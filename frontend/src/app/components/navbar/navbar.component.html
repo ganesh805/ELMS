@@ -1,0 +1,26 @@
+<header class="navbar-container glass-card">
+  <div class="brand-section">
+    <div class="brand-icon">🌴</div>
+    <div class="brand-title">
+      <span class="gradient-text">ELMS</span>
+      <span class="sub-text">Leave Management System</span>
+    </div>
+  </div>
+
+  <div class="user-section" *ngIf="currentUser">
+    <div class="user-info">
+      <span class="user-name">{{ currentUser.fullName }}</span>
+      <span class="user-role badge" 
+        [ngClass]="{
+          'badge-approved': currentUser.role === 'HR_ADMIN',
+          'badge-pending': currentUser.role === 'MANAGER',
+          'badge-cancelled': currentUser.role === 'EMPLOYEE'
+        }">
+        {{ currentUser.role }}
+      </span>
+    </div>
+    <button class="btn btn-secondary btn-sm" (click)="onLogout()">
+      Logout 🚪
+    </button>
+  </div>
+</header>
