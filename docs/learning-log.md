@@ -373,3 +373,29 @@ Provides HR Administrators with complete administrative control over employee ac
 
 ## Viva explanation
 > "In Commit 13, I implemented HR Admin management endpoints in AdminController and AdminUserService. HR Admins can create and edit employee accounts, assign line managers, adjust annual leave quotas, and revoke approved leave requests with automatic balance re-crediting."
+
+---
+
+# Commit 14 — feat: implement leave type management APIs
+
+## What I built
+- Created `LeaveTypeCreateDTO` and `LeaveTypeUpdateDTO`.
+- Implemented leave category management in `LeaveTypeService` (create, update, soft delete).
+- Added `existsByNameIgnoreCase` in `LeaveTypeRepository` to prevent duplicate category names.
+- Exposed `POST /api/admin/leave-types`, `PUT /api/admin/leave-types/{id}`, and `DELETE /api/admin/leave-types/{id}` in `AdminController`.
+
+## Why this feature is needed
+Allows HR Administrators to configure company leave policies, set default annual quotas, and manage active/inactive leave categories.
+
+## Files created / modified
+- [`backend/src/main/java/com/elms/dto/request/LeaveTypeCreateDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/request/LeaveTypeCreateDTO.java)
+- [`backend/src/main/java/com/elms/dto/request/LeaveTypeUpdateDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/request/LeaveTypeUpdateDTO.java)
+- [`backend/src/main/java/com/elms/service/LeaveTypeService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/LeaveTypeService.java)
+- [`backend/src/main/java/com/elms/repository/LeaveTypeRepository.java`](file:///d:/ELMS/backend/src/main/java/com/elms/repository/LeaveTypeRepository.java)
+- [`backend/src/main/java/com/elms/controller/AdminController.java`](file:///d:/ELMS/backend/src/main/java/com/elms/controller/AdminController.java)
+
+## Soft Delete Pattern concept
+**Data Preservation**: Calling `DELETE /api/admin/leave-types/{id}` updates `active = false` rather than executing SQL `DELETE`, preserving historic leave requests linked to that leave type.
+
+## Viva explanation
+> "In Commit 14, I implemented leave category CRUD operations for HR Admins. The service prevents duplicate category names and uses a soft-delete pattern setting active = false to preserve historical leave records."

@@ -1,16 +1,15 @@
 package com.elms.controller;
 
-import com.elms.dto.request.BalanceAdjustDTO;
-import com.elms.dto.request.DecisionRequestDTO;
-import com.elms.dto.request.UserCreateDTO;
-import com.elms.dto.request.UserUpdateDTO;
+import com.elms.dto.request.*;
 import com.elms.dto.response.LeaveBalanceDTO;
 import com.elms.dto.response.LeaveRequestDTO;
+import com.elms.dto.response.LeaveTypeDTO;
 import com.elms.dto.response.UserDTO;
 import com.elms.entity.enums.LeaveStatus;
 import com.elms.service.AdminUserService;
 import com.elms.service.LeaveBalanceService;
 import com.elms.service.LeaveRequestService;
+import com.elms.service.LeaveTypeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +27,7 @@ public class AdminController {
     private final AdminUserService adminUserService;
     private final LeaveBalanceService leaveBalanceService;
     private final LeaveRequestService leaveRequestService;
+    private final LeaveTypeService leaveTypeService;
 
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
@@ -46,6 +46,26 @@ public class AdminController {
             @RequestBody UserUpdateDTO dto) {
         UserDTO updated = adminUserService.updateUser(userId, dto);
         return ResponseEntity.ok(updated);
+    }
+
+    @PostMapping("/leave-types")
+    public ResponseEntity<LeaveTypeDTO> createLeaveType(@Valid @RequestBody LeaveTypeCreateDTO dto) {
+        LeaveTypeDTO created = leaveTypeService.createLeaveType(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PutMapping("/leave-types/{id}")
+    public ResponseEntity<LeaveTypeDTO> updateLeaveType(
+            @PathVariable("id") Long id,
+            @RequestBody LeaveTypeUpdateDTO dto) {
+        LeaveTypeDTO updated = leaveTypeService.updateLeaveType(id, dto);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/leave-types/{id}")
+    public ResponseEntity<Void> deleteLeaveType(@PathVariable("id") Long id) {
+        leaveTypeService.deleteLeaveType(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/leave-balances/adjust")
