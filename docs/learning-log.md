@@ -449,3 +449,34 @@ Provides automatic email notifications to managers and employees upon workflow s
 
 ## Viva explanation
 > "In Commit 16, I built the asynchronous EmailService and configured OpenAPI/Swagger documentation. Email notifications execute non-blockingly using @Async so user API requests complete immediately without network delay."
+
+---
+
+# Commit 17 — feat: implement spring security and jwt authentication
+
+## What I built
+- Implemented `JwtTokenProvider` for HMAC-SHA384 token generation and validation.
+- Implemented `CustomUserDetailsService` loading user authentication details and roles from MySQL.
+- Implemented `JwtAuthenticationFilter` verifying Bearer JWT tokens and `X-User-Id` headers.
+- Created `SecurityConfig` setting stateless session management and role-based endpoint authorization (`HR_ADMIN`, `MANAGER`, `EMPLOYEE`).
+- Updated `AuthService` and `AuthController` returning `JwtResponseDTO` with BCrypt password verification.
+- Updated `DataInitializer` encoding seed user passwords with BCrypt.
+
+## Why this feature is needed
+Secures all backend REST APIs using industry-standard JWT authentication and role-based access control (RBAC), completing the entire Spring Boot backend.
+
+## Files created / modified
+- [`backend/src/main/java/com/elms/security/JwtTokenProvider.java`](file:///d:/ELMS/backend/src/main/java/com/elms/security/JwtTokenProvider.java)
+- [`backend/src/main/java/com/elms/security/CustomUserDetailsService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/security/CustomUserDetailsService.java)
+- [`backend/src/main/java/com/elms/security/JwtAuthenticationFilter.java`](file:///d:/ELMS/backend/src/main/java/com/elms/security/JwtAuthenticationFilter.java)
+- [`backend/src/main/java/com/elms/config/SecurityConfig.java`](file:///d:/ELMS/backend/src/main/java/com/elms/config/SecurityConfig.java)
+- [`backend/src/main/java/com/elms/dto/response/JwtResponseDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/response/JwtResponseDTO.java)
+- [`backend/src/main/java/com/elms/service/AuthService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/AuthService.java)
+- [`backend/src/main/java/com/elms/controller/AuthController.java`](file:///d:/ELMS/backend/src/main/java/com/elms/controller/AuthController.java)
+- [`backend/src/main/java/com/elms/config/DataInitializer.java`](file:///d:/ELMS/backend/src/main/java/com/elms/config/DataInitializer.java)
+
+## JWT & Spring Security concept
+**Stateless Authentication & Role-Based Access Control**: Requests are authenticated statelessly using signed JWT claims. Spring Security enforces role boundaries so `/api/admin/**` requires `ROLE_HR_ADMIN` and manager approval endpoints require `ROLE_MANAGER`.
+
+## Viva explanation
+> "In Commit 17, I implemented Spring Security and JWT authentication. Passwords are encrypted using BCrypt, and API endpoints are protected using a stateless JwtAuthenticationFilter with role-based access control for HR Admins, Managers, and Employees."

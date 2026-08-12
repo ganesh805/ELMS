@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +16,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-// Seeds initial development data (Users, Leave Types, Balances, Holidays, Sample Requests)
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
@@ -27,23 +27,22 @@ public class DataInitializer implements CommandLineRunner {
     private final LeaveBalanceRepository leaveBalanceRepository;
     private final LeaveRequestRepository leaveRequestRepository;
     private final HolidayRepository holidayRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        // Skip seeding if users already exist
         if (userRepository.count() > 0) {
             log.info("Seed data already present. Skipping initialization.");
             return;
         }
 
-        log.info("Seeding initial ELMS data...");
+        log.info("Seeding initial ELMS data with BCrypt password hashing...");
 
-        // 1. Create Users
         User admin = userRepository.save(User.builder()
                 .fullName("HR Admin")
                 .email("admin@elms.com")
-                .password("admin123")
+                .password(passwordEncoder.encode("admin123"))
                 .role(Role.HR_ADMIN)
                 .department("Human Resources")
                 .dateOfJoining(LocalDate.of(2022, 1, 15))
@@ -52,7 +51,7 @@ public class DataInitializer implements CommandLineRunner {
         User manager = userRepository.save(User.builder()
                 .fullName("Sarah Jenkins")
                 .email("manager@elms.com")
-                .password("manager123")
+                .password(passwordEncoder.encode("manager123"))
                 .role(Role.MANAGER)
                 .department("Engineering")
                 .dateOfJoining(LocalDate.of(2023, 3, 1))
@@ -61,7 +60,7 @@ public class DataInitializer implements CommandLineRunner {
         User employee1 = userRepository.save(User.builder()
                 .fullName("John Doe")
                 .email("employee1@elms.com")
-                .password("employee123")
+                .password(passwordEncoder.encode("employee123"))
                 .role(Role.EMPLOYEE)
                 .department("Engineering")
                 .dateOfJoining(LocalDate.of(2024, 6, 10))
@@ -71,14 +70,13 @@ public class DataInitializer implements CommandLineRunner {
         User employee2 = userRepository.save(User.builder()
                 .fullName("Alice Smith")
                 .email("employee2@elms.com")
-                .password("employee123")
+                .password(passwordEncoder.encode("employee123"))
                 .role(Role.EMPLOYEE)
                 .department("Engineering")
                 .dateOfJoining(LocalDate.of(2024, 8, 1))
                 .manager(manager)
                 .build());
 
-        // 2. Create Leave Types
         LeaveType annualLeave = leaveTypeRepository.save(LeaveType.builder()
                 .name("Annual Leave")
                 .defaultAnnualQuota(18)
@@ -103,7 +101,6 @@ public class DataInitializer implements CommandLineRunner {
                 .requiresApproval(true)
                 .build());
 
-        // 3. Create Public Holidays
         holidayRepository.save(Holiday.builder()
                 .date(LocalDate.of(2026, 1, 1))
                 .name("New Year's Day")
@@ -116,7 +113,6 @@ public class DataInitializer implements CommandLineRunner {
                 .description("National holiday")
                 .build());
 
-        // 4. Create Leave Balances for 2026
         int currentYear = 2026;
         List<User> employeesToSeed = List.of(manager, employee1, employee2);
         List<LeaveType> leaveTypes = List.of(annualLeave, sickLeave, casualLeave);
@@ -134,7 +130,6 @@ public class DataInitializer implements CommandLineRunner {
             }
         }
 
-        // Update employee1 annual leave balance for sample approved request
         LeaveBalance emp1AnnualBalance = leaveBalanceRepository
                 .findByUserIdAndLeaveTypeIdAndYear(employee1.getId(), annualLeave.getId(), currentYear)
                 .orElseThrow();
@@ -142,7 +137,6 @@ public class DataInitializer implements CommandLineRunner {
         emp1AnnualBalance.setRemaining(15);
         leaveBalanceRepository.save(emp1AnnualBalance);
 
-        // 5. Create Sample Leave Requests
         leaveRequestRepository.save(LeaveRequest.builder()
                 .user(employee1)
                 .leaveType(annualLeave)

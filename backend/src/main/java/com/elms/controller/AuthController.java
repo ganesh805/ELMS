@@ -1,7 +1,7 @@
 package com.elms.controller;
 
 import com.elms.dto.request.LoginRequestDTO;
-import com.elms.dto.response.UserDTO;
+import com.elms.dto.response.JwtResponseDTO;
 import com.elms.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +17,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> login(@Valid @RequestBody LoginRequestDTO request) {
-        UserDTO userDTO = authService.login(request);
-        return ResponseEntity.ok(userDTO);
+    public ResponseEntity<JwtResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
+        return ResponseEntity.ok(authService.login(request));
     }
 }
