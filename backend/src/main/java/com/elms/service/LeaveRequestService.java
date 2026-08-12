@@ -33,6 +33,7 @@ public class LeaveRequestService {
     private final LeaveTypeRepository leaveTypeRepository;
     private final LeaveBalanceRepository leaveBalanceRepository;
     private final WorkingDayService workingDayService;
+    private final EmailService emailService;
 
     @Transactional
     public LeaveRequestDTO createLeaveRequest(Long userId, LeaveCreateDTO dto, String attachmentFileName) {
@@ -90,7 +91,10 @@ public class LeaveRequestService {
                 .build();
 
         LeaveRequest savedRequest = leaveRequestRepository.save(leaveRequest);
-        return EntityMapper.toLeaveRequestDTO(savedRequest);
+        LeaveRequestDTO responseDTO = EntityMapper.toLeaveRequestDTO(savedRequest);
+
+        emailService.sendLeaveSubmissionNotification(responseDTO);
+        return responseDTO;
     }
 
     @Transactional(readOnly = true)
@@ -162,7 +166,10 @@ public class LeaveRequestService {
         request.setDecisionDate(LocalDateTime.now());
 
         LeaveRequest updatedRequest = leaveRequestRepository.save(request);
-        return EntityMapper.toLeaveRequestDTO(updatedRequest);
+        LeaveRequestDTO responseDTO = EntityMapper.toLeaveRequestDTO(updatedRequest);
+
+        emailService.sendApprovalNotification(responseDTO);
+        return responseDTO;
     }
 
     @Transactional
@@ -183,7 +190,10 @@ public class LeaveRequestService {
         request.setDecisionDate(LocalDateTime.now());
 
         LeaveRequest updatedRequest = leaveRequestRepository.save(request);
-        return EntityMapper.toLeaveRequestDTO(updatedRequest);
+        LeaveRequestDTO responseDTO = EntityMapper.toLeaveRequestDTO(updatedRequest);
+
+        emailService.sendRejectionNotification(responseDTO);
+        return responseDTO;
     }
 
     @Transactional

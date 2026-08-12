@@ -424,3 +424,28 @@ Enables HR Admins to register company public holidays (which dynamically adjust 
 
 ## Viva explanation
 > "In Commit 15, I built public holiday management and the medical attachment upload service. Uploaded files are stored safely in an external uploads directory using UUID prefixing to prevent filename collisions."
+
+---
+
+# Commit 16 — feat: implement email notification service and swagger openapi documentation
+
+## What I built
+- Created `EmailService` handling asynchronous email notifications (`@Async`) for leave submission, approval, and rejection events.
+- Integrated `EmailService` into `LeaveRequestService`.
+- Created `OpenApiConfig` configuring SpringDoc OpenAPI 3 / Swagger UI specifications with JWT bearer scheme.
+- Added `spring-boot-starter-mail`, `spring-boot-starter-security`, and `jjwt` dependencies in `pom.xml`.
+
+## Why this feature is needed
+Provides automatic email notifications to managers and employees upon workflow status changes, and exposes interactive API documentation at `/swagger-ui/index.html`.
+
+## Files created / modified
+- [`backend/src/main/java/com/elms/service/EmailService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/EmailService.java)
+- [`backend/src/main/java/com/elms/config/OpenApiConfig.java`](file:///d:/ELMS/backend/src/main/java/com/elms/config/OpenApiConfig.java)
+- [`backend/src/main/java/com/elms/service/LeaveRequestService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/LeaveRequestService.java)
+- [`backend/pom.xml`](file:///d:/ELMS/backend/pom.xml)
+
+## Asynchronous Processing concept
+**`@Async` Non-Blocking Execution**: Email notifications execute on a separate background worker thread, ensuring API endpoints respond instantly to users without waiting for SMTP network latency.
+
+## Viva explanation
+> "In Commit 16, I built the asynchronous EmailService and configured OpenAPI/Swagger documentation. Email notifications execute non-blockingly using @Async so user API requests complete immediately without network delay."
