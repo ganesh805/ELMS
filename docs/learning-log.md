@@ -120,11 +120,10 @@ JPA entities define the Object-Relational Mapping (ORM) between Java object mode
 
 ## What I built
 - Created 5 Spring Data JPA Repositories: `UserRepository`, `LeaveTypeRepository`, `LeaveBalanceRepository`, `LeaveRequestRepository`, `HolidayRepository`.
-- Implemented `DataInitializer` bean to populate initial database seed records on application startup.
-- Created sample seed users (HR Admin, Manager, 2 Employees), 3 leave types, public holidays, annual balances for 2026, and sample leave requests (`APPROVED`, `PENDING`, `REJECTED`).
+- Implemented `DataInitializer` bean to populate baseline system setup on application startup (Default HR Admin account and base leave categories).
 
 ## Why this feature is needed
-Repositories abstract SQL queries into clean Java methods. Seed data ensures developer and evaluator environments have realistic test data ready immediately after cloning.
+Repositories abstract SQL queries into clean Java methods. Baseline initialization provides the initial HR Admin account (`admin@elms.com` / `admin123`) so administrators can log in and create user accounts step by step.
 
 ## Files created
 - [`backend/src/main/java/com/elms/repository/UserRepository.java`](file:///d:/ELMS/backend/src/main/java/com/elms/repository/UserRepository.java)
@@ -138,7 +137,7 @@ Repositories abstract SQL queries into clean Java methods. Seed data ensures dev
 **Derived Query Methods & JPQL `@Query`**: Spring Data JPA automatically generates SQL queries from method signatures (e.g. `findByEmail`, `findByUserIdAndYear`). For complex date range overlap conditions, explicit JPQL queries (`@Query`) are used.
 
 ## Viva explanation
-> "In Commit 04, I created Spring Data JPA repositories and a DataInitializer startup component. This automatically populates seed accounts, leave categories, public holidays, yearly quotas, and sample requests so the application works out of the box."
+> "In Commit 04, I created Spring Data JPA repositories and a DataInitializer startup component. This sets up the baseline system with default leave categories and an initial HR Admin account so administrators can log in and populate accounts manually."
 
 ---
 
@@ -686,7 +685,7 @@ Provides HR Administrators with complete visual control over system users, manag
 - [`frontend/src/app/components/admin-users/admin-users.component.ts`](file:///d:/ELMS/frontend/src/app/components/admin-users/admin-users.component.ts)
 - [`frontend/src/app/components/admin-users/admin-users.component.html`](file:///d:/ELMS/frontend/src/app/components/admin-users/admin-users.component.html)
 - [`frontend/src/app/components/admin-users/admin-users.component.css`](file:///d:/ELMS/frontend/src/app/components/admin-users/admin-users.component.css)
-- [`frontend/src/app/components/admin-leave-types/admin-leave-types.component.ts`](file:///d:/ELMS/frontend/src/app/components/admin-leave-types/admin-leave-types.component.ts)
+- [`frontend/src/app/components/admin-leave-types/admin-leave-types.component.ts`](file:///d:/ELMS/frontend/src/app/components/admin-leave-types/admin-leave-types.component.html)
 - [`frontend/src/app/components/admin-leave-types/admin-leave-types.component.html`](file:///d:/ELMS/frontend/src/app/components/admin-leave-types/admin-leave-types.component.html)
 - [`frontend/src/app/components/admin-leave-types/admin-leave-types.component.css`](file:///d:/ELMS/frontend/src/app/components/admin-leave-types/admin-leave-types.component.css)
 - [`frontend/src/app/app.routes.ts`](file:///d:/ELMS/frontend/src/app/app.routes.ts)
@@ -696,3 +695,31 @@ Provides HR Administrators with complete visual control over system users, manag
 
 ## Viva explanation
 > "In Commit 25, I built the HR Admin views (AdminUsersComponent and AdminLeaveTypesComponent). These components allow HR Administrators to manage employee accounts, assign line managers, override leave quotas, configure leave category policies, and register company public holidays."
+
+---
+
+# Commit 26 — test: write comprehensive end to end integration tests
+
+## What I built
+- Implemented `IntegrationTest` in `backend/src/test/java/com/elms/integration/IntegrationTest.java`.
+- Configured end-to-end integration tests using Spring Boot `MockMvc` testing framework.
+- Verified the complete full-stack flow:
+  1. Employee sign-in & JWT token acquisition (`POST /api/auth/login`).
+  2. Initial quota retrieval (`GET /api/leave-balances/my`).
+  3. Leave application creation (`POST /api/leaves`).
+  4. Overlap error validation (**Rule 2**).
+  5. Manager authentication & pending queue retrieval (`GET /api/leaves/pending`).
+  6. Manager approval execution (**Rule 6**).
+  7. Automatic leave balance deduction verification (**Rule 7**).
+
+## Why this feature is needed
+Automated integration testing validates that all system components (Security, Controllers, Services, Business Rule Engine, Repositories, Database) operate together seamlessly without regressions.
+
+## Files created
+- [`backend/src/test/java/com/elms/integration/IntegrationTest.java`](file:///d:/ELMS/backend/src/test/java/com/elms/integration/IntegrationTest.java)
+
+## Integration Testing & MockMvc concept
+**End-to-End REST Simulation**: `MockMvc` executes HTTP requests through the full Spring Security filter chain and Controller dispatchers, validating REST contracts and status codes against a live test context.
+
+## Viva explanation
+> "In Commit 26, I wrote comprehensive end-to-end integration tests using Spring Boot MockMvc. The test suite exercises the complete lifecycle from user login and leave submission to overlap prevention, manager approval, and automatic balance deduction."

@@ -48,6 +48,9 @@ class LeaveRequestServiceTest {
     @Mock
     private WorkingDayService workingDayService;
 
+    @Mock
+    private EmailService emailService;
+
     @InjectMocks
     private LeaveRequestService leaveRequestService;
 
