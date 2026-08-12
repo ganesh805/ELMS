@@ -399,3 +399,28 @@ Allows HR Administrators to configure company leave policies, set default annual
 
 ## Viva explanation
 > "In Commit 14, I implemented leave category CRUD operations for HR Admins. The service prevents duplicate category names and uses a soft-delete pattern setting active = false to preserve historical leave records."
+
+---
+
+# Commit 15 — feat: implement holiday management and medical file attachment service
+
+## What I built
+- Created `HolidayCreateDTO` and implemented `createHoliday` / `deleteHoliday` in `HolidayService`.
+- Created `AttachmentService` for storing and serving uploaded medical certificate attachments (`POST /api/leaves/upload-attachment`, `GET /api/leaves/attachments/{fileName}`).
+- Exposed `POST /api/admin/holidays` and `DELETE /api/admin/holidays/{id}` in `AdminController`.
+
+## Why this feature is needed
+Enables HR Admins to register company public holidays (which dynamically adjust working day calculations) and allows employees to upload medical documents for Sick Leave applications.
+
+## Files created / modified
+- [`backend/src/main/java/com/elms/dto/request/HolidayCreateDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/request/HolidayCreateDTO.java)
+- [`backend/src/main/java/com/elms/service/AttachmentService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/AttachmentService.java)
+- [`backend/src/main/java/com/elms/service/HolidayService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/HolidayService.java)
+- [`backend/src/main/java/com/elms/controller/EmployeeLeaveController.java`](file:///d:/ELMS/backend/src/main/java/com/elms/controller/EmployeeLeaveController.java)
+- [`backend/src/main/java/com/elms/controller/AdminController.java`](file:///d:/ELMS/backend/src/main/java/com/elms/controller/AdminController.java)
+
+## File Storage concept
+**UUID Prefixing**: Files saved to `uploads/` are prefixed with `UUID.randomUUID()` to prevent filename collisions when multiple users upload files with identical names (e.g. `medical_certificate.pdf`).
+
+## Viva explanation
+> "In Commit 15, I built public holiday management and the medical attachment upload service. Uploaded files are stored safely in an external uploads directory using UUID prefixing to prevent filename collisions."

@@ -1,15 +1,9 @@
 package com.elms.controller;
 
 import com.elms.dto.request.*;
-import com.elms.dto.response.LeaveBalanceDTO;
-import com.elms.dto.response.LeaveRequestDTO;
-import com.elms.dto.response.LeaveTypeDTO;
-import com.elms.dto.response.UserDTO;
+import com.elms.dto.response.*;
 import com.elms.entity.enums.LeaveStatus;
-import com.elms.service.AdminUserService;
-import com.elms.service.LeaveBalanceService;
-import com.elms.service.LeaveRequestService;
-import com.elms.service.LeaveTypeService;
+import com.elms.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +22,7 @@ public class AdminController {
     private final LeaveBalanceService leaveBalanceService;
     private final LeaveRequestService leaveRequestService;
     private final LeaveTypeService leaveTypeService;
+    private final HolidayService holidayService;
 
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
@@ -65,6 +60,18 @@ public class AdminController {
     @DeleteMapping("/leave-types/{id}")
     public ResponseEntity<Void> deleteLeaveType(@PathVariable("id") Long id) {
         leaveTypeService.deleteLeaveType(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/holidays")
+    public ResponseEntity<HolidayDTO> createHoliday(@Valid @RequestBody HolidayCreateDTO dto) {
+        HolidayDTO created = holidayService.createHoliday(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @DeleteMapping("/holidays/{id}")
+    public ResponseEntity<Void> deleteHoliday(@PathVariable("id") Long id) {
+        holidayService.deleteHoliday(id);
         return ResponseEntity.noContent().build();
     }
 
