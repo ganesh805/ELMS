@@ -533,3 +533,31 @@ Establishes the core UI theme, global styles, and responsive navigation shell fo
 
 ## Viva explanation
 > "In Commit 19, I built the Angular design system and layout shell components. I created a dark-mode glassmorphism design system in styles.css and implemented Navbar and Sidebar components with dynamic role-based navigation menus."
+
+---
+
+# Commit 20 — feat: implement angular authentication service and login component
+
+## What I built
+- Created `AuthService` with RxJS `BehaviorSubject` for user state management, local storage persistence, and authentication status.
+- Implemented `jwtInterceptor` automatically attaching Bearer JWT token and `X-User-Id` headers to outgoing HTTP requests.
+- Implemented `authGuard` protecting routes and enforcing role permissions.
+- Built standalone `LoginComponent` with glassmorphism UI card, form validation, and instant quick-login demo buttons for all 4 roles.
+
+## Why this feature is needed
+Enables users to sign in, stores session tokens, protects restricted Angular client routes, and automatically authorizes REST API calls.
+
+## Files created / modified
+- [`frontend/src/app/services/auth.service.ts`](file:///d:/ELMS/frontend/src/app/services/auth.service.ts)
+- [`frontend/src/app/interceptors/jwt.interceptor.ts`](file:///d:/ELMS/frontend/src/app/interceptors/jwt.interceptor.ts)
+- [`frontend/src/app/guards/auth.guard.ts`](file:///d:/ELMS/frontend/src/app/guards/auth.guard.ts)
+- [`frontend/src/app/components/login/login.component.ts`](file:///d:/ELMS/frontend/src/app/components/login/login.component.ts)
+- [`frontend/src/app/components/login/login.component.html`](file:///d:/ELMS/frontend/src/app/components/login/login.component.html)
+- [`frontend/src/app/components/login/login.component.css`](file:///d:/ELMS/frontend/src/app/components/login/login.component.css)
+- [`frontend/src/app/app.config.ts`](file:///d:/ELMS/frontend/src/app/app.config.ts)
+
+## RxJS BehaviorSubject & HTTP Interceptor concept
+**Reactive Auth State & HTTP Request Interception**: `BehaviorSubject` emits current user state across all components. `jwtInterceptor` clones outgoing HTTP requests to append `Authorization: Bearer <token>` seamlessly.
+
+## Viva explanation
+> "In Commit 20, I built the Angular authentication architecture. I created AuthService with RxJS BehaviorSubject for reactive session tracking, a functional jwtInterceptor to attach Bearer tokens to REST calls, an authGuard for route protection, and a glassmorphism LoginComponent with quick-login demo buttons."
