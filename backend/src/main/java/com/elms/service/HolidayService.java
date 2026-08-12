@@ -17,8 +17,13 @@ public class HolidayService {
     private final HolidayRepository holidayRepository;
 
     @Transactional(readOnly = true)
-    public List<HolidayDTO> getAllHolidays() {
-        return holidayRepository.findAll().stream()
+    public List<HolidayDTO> getHolidaysByYear(Integer year) {
+        if (year == null) {
+            return holidayRepository.findAll().stream()
+                    .map(EntityMapper::toHolidayDTO)
+                    .toList();
+        }
+        return holidayRepository.findByYear(year).stream()
                 .map(EntityMapper::toHolidayDTO)
                 .toList();
     }

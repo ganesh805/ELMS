@@ -17,8 +17,8 @@ public class HolidayController {
     private final HolidayService holidayService;
 
     @GetMapping
-    public ResponseEntity<List<HolidayDTO>> getAllHolidays() {
-        return ResponseEntity.ok(holidayService.getAllHolidays());
+    public ResponseEntity<List<HolidayDTO>> getHolidays(@RequestParam(name = "year", required = false) Integer year) {
+        return ResponseEntity.ok(holidayService.getHolidaysByYear(year));
     }
 
     @GetMapping("/upcoming")
