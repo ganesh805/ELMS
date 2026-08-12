@@ -594,3 +594,28 @@ Provides employees with a central, interactive dashboard to monitor their leave 
 
 ## Viva explanation
 > "In Commit 21, I built the Employee Dashboard component and RxJS API services. The dashboard presents leave quota cards with visual progress bars, recent leave request status badges, and upcoming company public holidays."
+
+---
+
+# Commit 22 — feat: implement leave application form component
+
+## What I built
+- Built standalone `ApplyLeaveComponent` featuring interactive leave category select, start & end date pickers, reason input, and medical attachment file picker.
+- Implemented real-time client-side Working Day Calculation engine (**Rule 1**) excluding Saturdays, Sundays, and public holidays automatically as dates change.
+- Integrated file upload integration with `AttachmentService` (`POST /api/leaves/upload-attachment`).
+- Configured `/apply-leave` route in `app.routes.ts`.
+
+## Why this feature is needed
+Enables employees to apply for leave with dynamic working day calculations, instant quota feedback, and optional medical attachment uploads.
+
+## Files created / modified
+- [`frontend/src/app/components/apply-leave/apply-leave.component.ts`](file:///d:/ELMS/frontend/src/app/components/apply-leave/apply-leave.component.ts)
+- [`frontend/src/app/components/apply-leave/apply-leave.component.html`](file:///d:/ELMS/frontend/src/app/components/apply-leave/apply-leave.component.html)
+- [`frontend/src/app/components/apply-leave/apply-leave.component.css`](file:///d:/ELMS/frontend/src/app/components/apply-leave/apply-leave.component.css)
+- [`frontend/src/app/app.routes.ts`](file:///d:/ELMS/frontend/src/app/app.routes.ts)
+
+## Client-Side Business Rule Engine concept
+**Dynamic Working Day Engine**: `recalculateWorkingDays()` iterates the date range in memory, cross-referencing public holiday dates returned by `HolidayService` to present net requested working days in real time before form submission.
+
+## Viva explanation
+> "In Commit 22, I built the ApplyLeaveComponent with real-time working day calculations and file upload capabilities. As the employee selects dates, the component dynamically filters weekends and public holidays, displaying net working days prior to API submission."

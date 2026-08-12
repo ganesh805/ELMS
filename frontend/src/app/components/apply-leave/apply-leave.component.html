@@ -1,0 +1,102 @@
+<div class="apply-leave-wrapper">
+  <div class="glass-card form-card">
+    <div class="form-header">
+      <h2>Apply for Leave 🌴</h2>
+      <p class="subtitle">Submit a new leave application to your manager</p>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      ⚠️ {{ errorMessage }}
+    </div>
+
+    <div class="alert alert-success" *ngIf="successMessage">
+      ✅ {{ successMessage }}
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="leave-form">
+      <!-- Leave Category Select -->
+      <div class="form-group">
+        <label class="form-label" for="leaveType">Leave Type Category</label>
+        <select 
+          id="leaveType" 
+          name="leaveType" 
+          class="form-control" 
+          [(ngModel)]="selectedLeaveTypeId" 
+          required>
+          <option *ngFor="let type of leaveTypes" [value]="type.id">
+            {{ type.name }} (Default Quota: {{ type.defaultAnnualQuota }} Days)
+          </option>
+        </select>
+      </div>
+
+      <!-- Date Range Inputs Grid -->
+      <div class="date-grid">
+        <div class="form-group">
+          <label class="form-label" for="startDate">Start Date</label>
+          <input 
+            type="date" 
+            id="startDate" 
+            name="startDate" 
+            class="form-control" 
+            [(ngModel)]="startDate" 
+            (change)="onDateChange()" 
+            required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="endDate">End Date</label>
+          <input 
+            type="date" 
+            id="endDate" 
+            name="endDate" 
+            class="form-control" 
+            [(ngModel)]="endDate" 
+            (change)="onDateChange()" 
+            required>
+        </div>
+      </div>
+
+      <!-- Working Day Preview Box -->
+      <div class="working-day-preview">
+        <div class="preview-icon">📅</div>
+        <div class="preview-info">
+          <span class="preview-label">Net Working Days</span>
+          <span class="preview-days">{{ calculatedWorkingDays }} Working Day(s)</span>
+        </div>
+        <span class="preview-note">Excludes weekends & public holidays</span>
+      </div>
+
+      <!-- Reason Textarea -->
+      <div class="form-group">
+        <label class="form-label" for="reason">Reason / Purpose of Leave</label>
+        <textarea 
+          id="reason" 
+          name="reason" 
+          rows="3" 
+          class="form-control" 
+          [(ngModel)]="reason" 
+          placeholder="Briefly state the reason for your leave request..." 
+          required></textarea>
+      </div>
+
+      <!-- Medical Attachment File Upload -->
+      <div class="form-group">
+        <label class="form-label" for="attachment">Medical Certificate Attachment (Optional)</label>
+        <input 
+          type="file" 
+          id="attachment" 
+          name="attachment" 
+          class="form-control file-input" 
+          (change)="onFileSelected($event)">
+        <small class="help-text">Upload PDF, PNG, or JPG for Sick Leave validation</small>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+          <span *ngIf="!isSubmitting">Submit Application 🚀</span>
+          <span *ngIf="isSubmitting">Submitting...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
