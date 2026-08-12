@@ -480,3 +480,29 @@ Secures all backend REST APIs using industry-standard JWT authentication and rol
 
 ## Viva explanation
 > "In Commit 17, I implemented Spring Security and JWT authentication. Passwords are encrypted using BCrypt, and API endpoints are protected using a stateless JwtAuthenticationFilter with role-based access control for HR Admins, Managers, and Employees."
+
+---
+
+# Commit 18 — chore: initialize angular 17 application
+
+## What I built
+- Initialized Angular 17 workspace in `frontend/` directory using `@angular/cli`.
+- Configured `angular.json`, `package.json`, `tsconfig.json`, and standalone application config `app.config.ts`.
+- Created environment configuration files (`environment.ts`, `environment.development.ts`) setting `apiUrl: 'http://localhost:8080/api'`.
+- Registered `provideHttpClient(withFetch())` in `app.config.ts` for HTTP REST API communications.
+
+## Why this feature is needed
+Initializes the Single Page Application (SPA) frontend project structure, establishing environment configurations and HTTP client providers for backend REST integration.
+
+## Files created
+- [`frontend/angular.json`](file:///d:/ELMS/frontend/angular.json)
+- [`frontend/package.json`](file:///d:/ELMS/frontend/package.json)
+- [`frontend/src/app/app.config.ts`](file:///d:/ELMS/frontend/src/app/app.config.ts)
+- [`frontend/src/environments/environment.ts`](file:///d:/ELMS/frontend/src/environments/environment.ts)
+- [`frontend/src/environments/environment.development.ts`](file:///d:/ELMS/frontend/src/environments/environment.development.ts)
+
+## Angular Standalone & HTTP Client concept
+**Standalone Application Architecture & `provideHttpClient`**: Angular 17 introduces standalone components without `NgModule`. `provideHttpClient(withFetch())` configures Angular's HTTP client using standard web fetch APIs.
+
+## Viva explanation
+> "In Commit 18, I initialized the Angular 17 frontend workspace. I set up environment configuration files pointing to our Spring Boot backend at http://localhost:8080/api and enabled provideHttpClient in app.config.ts for REST communication."
