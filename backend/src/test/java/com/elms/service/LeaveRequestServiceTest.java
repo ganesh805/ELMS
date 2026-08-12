@@ -27,6 +27,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,6 +52,7 @@ class LeaveRequestServiceTest {
     private LeaveRequestService leaveRequestService;
 
     private User sampleUser;
+    private User sampleApprover;
     private LeaveType sampleLeaveType;
     private LeaveBalance sampleBalance;
     private LeaveCreateDTO createDTO;
@@ -61,6 +63,12 @@ class LeaveRequestServiceTest {
                 .id(1L)
                 .fullName("John Doe")
                 .email("john@example.com")
+                .build();
+
+        sampleApprover = User.builder()
+                .id(2L)
+                .fullName("Sarah Jenkins")
+                .email("sarah@example.com")
                 .build();
 
         sampleLeaveType = LeaveType.builder()
@@ -144,5 +152,31 @@ class LeaveRequestServiceTest {
                 () -> leaveRequestService.createLeaveRequest(1L, createDTO, null));
 
         assertTrue(ex.getMessage().contains("overlap"));
+    }
+
+    @Test
+    void testApproveLeaveRequest_DeductsBalanceAndApproves() {
+        LeaveRequest pendingRequest = LeaveRequest.builder()
+                .id(10L)
+                .user(sampleUser)
+                .leaveType(sampleLeaveType)
+                .startDate(LocalDate.of(2026, 10, 5))
+                .endDate(LocalDate.of(2026, 10, 9))
+                .numberOfDays(5)
+                .status(LeaveStatus.PENDING)
+                .build();
+
+        when(leaveRequestRepository.findById(10L)).thenReturn(Optional.of(pendingRequest));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(sampleApprover));
+        when(leaveBalanceRepository.findByUserIdAndLeaveTypeIdAndYear(1L, 1L, 2026))
+                .thenReturn(Optional.of(sampleBalance));
+        when(leaveRequestRepository.save(any(LeaveRequest.class))).thenAnswer(i -> i.getArgument(0));
+
+        LeaveRequestDTO result = leaveRequestService.approveLeaveRequest(10L, 2L, "Approved!");
+
+        assertEquals(LeaveStatus.APPROVED, result.getStatus());
+        assertEquals(8, sampleBalance.getUsed());
+        assertEquals(10, sampleBalance.getRemaining());
+        verify(leaveBalanceRepository).save(sampleBalance);
     }
 }

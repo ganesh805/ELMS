@@ -130,6 +130,19 @@ public class LeaveRequestService {
         User approver = userRepository.findById(approverId)
                 .orElseThrow(() -> new ResourceNotFoundException("Approver user not found with id: " + approverId));
 
+        int leaveYear = request.getStartDate().getYear();
+        LeaveBalance balance = leaveBalanceRepository.findByUserIdAndLeaveTypeIdAndYear(
+                request.getUser().getId(), request.getLeaveType().getId(), leaveYear)
+                .orElseThrow(() -> new BusinessRuleException("No leave balance record found for user in year " + leaveYear));
+
+        if (request.getNumberOfDays() > balance.getRemaining()) {
+            throw new InsufficientLeaveBalanceException("Cannot approve: requested days exceed current remaining balance");
+        }
+
+        balance.setUsed(balance.getUsed() + request.getNumberOfDays());
+        balance.setRemaining(balance.getAllocated() - balance.getUsed());
+        leaveBalanceRepository.save(balance);
+
         request.setStatus(LeaveStatus.APPROVED);
         request.setApprover(approver);
         request.setDecisionComment(decisionComment);

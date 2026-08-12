@@ -323,3 +323,25 @@ Enables direct line managers to review, approve, or reject pending leave request
 
 ## Viva explanation
 > "In Commit 11, I implemented the leave approval workflow and state transitions. Managers can retrieve pending team requests and submit decision comments to approve or reject them. Employees can cancel pending requests. All transitions enforce Rule 6, rejecting state changes on non-pending requests."
+
+---
+
+# Commit 12 — feat: implement automatic balance deduction on approval
+
+## What I built
+- Implemented **Business Rule 7** (Automatic Balance Deduction) in `LeaveRequestService.approveLeaveRequest(...)`.
+- When a leave request is approved, the system fetches the employee's `LeaveBalance` for the target year and automatically updates `used` and `remaining` balances.
+- Added unit tests in `LeaveRequestServiceTest` verifying automatic balance deduction on approval.
+
+## Why this feature is needed
+Business Rule 7 guarantees that approving a leave request automatically updates the employee's remaining quota, maintaining strict database consistency between leave history and current balances.
+
+## Files modified
+- [`backend/src/main/java/com/elms/service/LeaveRequestService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/LeaveRequestService.java)
+- [`backend/src/test/java/com/elms/service/LeaveRequestServiceTest.java`](file:///d:/ELMS/backend/src/test/java/com/elms/service/LeaveRequestServiceTest.java)
+
+## Transactional State Update concept
+**Atomic Balance Mutation**: `balance.setUsed(used + days)` and `balance.setRemaining(allocated - used)` execute inside the `@Transactional` boundary during request approval, preventing quota drift.
+
+## Viva explanation
+> "In Commit 12, I implemented Business Rule 7 for automatic balance deduction upon request approval. In approveLeaveRequest, the service fetches the user's LeaveBalance entity for the request's year, increments used days, decrements remaining days, and saves the updated balance in the same transaction."
