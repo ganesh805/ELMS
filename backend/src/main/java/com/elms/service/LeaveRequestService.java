@@ -118,6 +118,19 @@ public class LeaveRequestService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<LeaveRequestDTO> getAllLeaveRequests(LeaveStatus status) {
+        if (status == null) {
+            return leaveRequestRepository.findAll().stream()
+                    .map(EntityMapper::toLeaveRequestDTO)
+                    .toList();
+        }
+        return leaveRequestRepository.findAll().stream()
+                .filter(r -> r.getStatus() == status)
+                .map(EntityMapper::toLeaveRequestDTO)
+                .toList();
+    }
+
     @Transactional
     public LeaveRequestDTO approveLeaveRequest(Long requestId, Long approverId, String decisionComment) {
         LeaveRequest request = leaveRequestRepository.findById(requestId)

@@ -345,3 +345,31 @@ Business Rule 7 guarantees that approving a leave request automatically updates 
 
 ## Viva explanation
 > "In Commit 12, I implemented Business Rule 7 for automatic balance deduction upon request approval. In approveLeaveRequest, the service fetches the user's LeaveBalance entity for the request's year, increments used days, decrements remaining days, and saves the updated balance in the same transaction."
+
+---
+
+# Commit 13 — feat: implement hr admin user leave and balance management APIs
+
+## What I built
+- Created `UserCreateDTO`, `UserUpdateDTO`, and `BalanceAdjustDTO`.
+- Implemented `AdminUserService` for creating, updating, and listing users.
+- Implemented `adjustBalance` in `LeaveBalanceService` allowing HR Admins to allocate or adjust annual leave quotas per user.
+- Created `AdminController` exposing `GET /api/admin/users`, `POST /api/admin/users`, `PUT /api/admin/users/{id}`, `POST /api/admin/leave-balances/adjust`, `GET /api/admin/leaves`, and `PUT /api/admin/leaves/{id}/revoke`.
+- Implemented `revokeApprovedLeaveRequest` in `LeaveRequestService` with automatic balance re-crediting.
+
+## Why this feature is needed
+Provides HR Administrators with complete administrative control over employee accounts, manager assignments, leave balance quota adjustments, and administrative revocations.
+
+## Files created / modified
+- [`backend/src/main/java/com/elms/controller/AdminController.java`](file:///d:/ELMS/backend/src/main/java/com/elms/controller/AdminController.java)
+- [`backend/src/main/java/com/elms/service/AdminUserService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/AdminUserService.java)
+- [`backend/src/main/java/com/elms/service/LeaveBalanceService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/LeaveBalanceService.java)
+- [`backend/src/main/java/com/elms/dto/request/UserCreateDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/request/UserCreateDTO.java)
+- [`backend/src/main/java/com/elms/dto/request/UserUpdateDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/request/UserUpdateDTO.java)
+- [`backend/src/main/java/com/elms/dto/request/BalanceAdjustDTO.java`](file:///d:/ELMS/backend/src/main/java/com/elms/dto/request/BalanceAdjustDTO.java)
+
+## Administrative Control concept
+**Quota Adjustment & Revocation**: HR Admins can manually override allocated quotas and revoke approved leave applications, which re-credits the used days back to the employee's remaining balance automatically.
+
+## Viva explanation
+> "In Commit 13, I implemented HR Admin management endpoints in AdminController and AdminUserService. HR Admins can create and edit employee accounts, assign line managers, adjust annual leave quotas, and revoke approved leave requests with automatic balance re-crediting."
