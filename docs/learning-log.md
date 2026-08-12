@@ -685,7 +685,7 @@ Provides HR Administrators with complete visual control over system users, manag
 - [`frontend/src/app/components/admin-users/admin-users.component.ts`](file:///d:/ELMS/frontend/src/app/components/admin-users/admin-users.component.ts)
 - [`frontend/src/app/components/admin-users/admin-users.component.html`](file:///d:/ELMS/frontend/src/app/components/admin-users/admin-users.component.html)
 - [`frontend/src/app/components/admin-users/admin-users.component.css`](file:///d:/ELMS/frontend/src/app/components/admin-users/admin-users.component.css)
-- [`frontend/src/app/components/admin-leave-types/admin-leave-types.component.ts`](file:///d:/ELMS/frontend/src/app/components/admin-leave-types/admin-leave-types.component.html)
+- [`frontend/src/app/components/admin-leave-types/admin-leave-types.component.ts`](file:///d:/ELMS/frontend/src/app/components/admin-leave-types/admin-leave-types.component.ts)
 - [`frontend/src/app/components/admin-leave-types/admin-leave-types.component.html`](file:///d:/ELMS/frontend/src/app/components/admin-leave-types/admin-leave-types.component.html)
 - [`frontend/src/app/components/admin-leave-types/admin-leave-types.component.css`](file:///d:/ELMS/frontend/src/app/components/admin-leave-types/admin-leave-types.component.css)
 - [`frontend/src/app/app.routes.ts`](file:///d:/ELMS/frontend/src/app/app.routes.ts)
@@ -723,3 +723,29 @@ Automated integration testing validates that all system components (Security, Co
 
 ## Viva explanation
 > "In Commit 26, I wrote comprehensive end-to-end integration tests using Spring Boot MockMvc. The test suite exercises the complete lifecycle from user login and leave submission to overlap prevention, manager approval, and automatic balance deduction."
+
+---
+
+# Commit 27 — docs: add architecture api database and business rules documentation
+
+## What I built
+- Authored four comprehensive technical documentation guides in `docs/`:
+  - [`docs/architecture.md`](file:///d:/ELMS/docs/architecture.md): System architecture, technology stack, and layered design.
+  - [`docs/api.md`](file:///d:/ELMS/docs/api.md): Complete REST API contract specifications.
+  - [`docs/database.md`](file:///d:/ELMS/docs/database.md): MySQL 8.4 schema dictionary and ERD diagram.
+  - [`docs/business-rules.md`](file:///d:/ELMS/docs/business-rules.md): In-depth business rule specifications and state machine logic.
+
+## Why this feature is needed
+Provides exhaustive documentation for project evaluators, team developers, and viva examination panels.
+
+## Files created
+- [`docs/architecture.md`](file:///d:/ELMS/docs/architecture.md)
+- [`docs/api.md`](file:///d:/ELMS/docs/api.md)
+- [`docs/database.md`](file:///d:/ELMS/docs/database.md)
+- [`docs/business-rules.md`](file:///d:/ELMS/docs/business-rules.md)
+
+## Documentation concept
+**Full-Stack Software Documentation Architecture**: Standard practice documenting system architecture, REST contracts, database ERDs, and business rule specifications alongside source code.
+
+## Viva explanation
+> "In Commit 27, I authored the project documentation suite, including system architecture, REST API contracts, database schemas with ERDs, and core business rule specifications."
