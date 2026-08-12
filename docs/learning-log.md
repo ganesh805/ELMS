@@ -768,3 +768,25 @@ Prepares students for viva questions and technical evaluation.
 
 ## Viva explanation
 > "In Commit 28, I compiled a viva preparation guide covering 50 technical Q&As across all project technologies and live coding refactoring exercises."
+
+---
+
+# Commit 29 — docs: finalize readme and project completion report
+
+## What I built
+- Finalized root [`README.md`](file:///d:/ELMS/README.md) with complete setup, build, and run instructions for backend and frontend.
+- Created [`docs/capstone-project-report.md`](file:///d:/ELMS/docs/capstone-project-report.md) summarizing project milestones, architectural highlights, and commit trajectory.
+
+## Why this feature is needed
+Provides the final completion documentation and project handover.
+
+## Files created / modified
+- [`README.md`](file:///d:/ELMS/README.md)
+- [`docs/capstone-project-report.md`](file:///d:/ELMS/docs/capstone-project-report.md)
+- [`docs/learning-log.md`](file:///d:/ELMS/docs/learning-log.md)
+
+## Capstone Report concept
+**Full-Stack Capstone Finalization**: Summarizes software deliverables, test suite pass rates, and complete documentation artifacts.
+
+## Viva explanation
+> "In Commit 29, I finalized the root README.md and capstone project completion report, documenting full-stack setup procedures and software verification metrics."
