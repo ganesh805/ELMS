@@ -749,3 +749,22 @@ Provides exhaustive documentation for project evaluators, team developers, and v
 
 ## Viva explanation
 > "In Commit 27, I authored the project documentation suite, including system architecture, REST API contracts, database schemas with ERDs, and core business rule specifications."
+
+---
+
+# Commit 28 — docs: add comprehensive viva preparation guide
+
+## What I built
+- Authored [`docs/viva-preparation.md`](file:///d:/ELMS/docs/viva-preparation.md) containing 50 top technical Q&As across system architecture, Spring Boot, MySQL, Spring Security, Business Rules, Angular 17, and live coding exercises.
+
+## Why this feature is needed
+Prepares students for viva questions and technical evaluation.
+
+## Files created
+- [`docs/viva-preparation.md`](file:///d:/ELMS/docs/viva-preparation.md)
+
+## Viva Preparation concept
+**Technical Examination Readiness**: Covers architectural trade-offs, Spring Security JWT interception, working day exclusion algorithms, and live coding refactoring tasks.
+
+## Viva explanation
+> "In Commit 28, I compiled a viva preparation guide covering 50 technical Q&As across all project technologies and live coding refactoring exercises."
