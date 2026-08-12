@@ -561,3 +561,36 @@ Enables users to sign in, stores session tokens, protects restricted Angular cli
 
 ## Viva explanation
 > "In Commit 20, I built the Angular authentication architecture. I created AuthService with RxJS BehaviorSubject for reactive session tracking, a functional jwtInterceptor to attach Bearer tokens to REST calls, an authGuard for route protection, and a glassmorphism LoginComponent with quick-login demo buttons."
+
+---
+
+# Commit 21 — feat: implement employee dashboard component
+
+## What I built
+- Created `LeaveBalanceService`, `LeaveRequestService`, `HolidayService`, and `LeaveTypeService` frontend RxJS API client services.
+- Built standalone `DashboardComponent` rendering user welcome banner, annual leave balance cards with visual progress bars, recent leave applications summary table, and upcoming public holidays widget.
+- Configured application routes (`/login`, `/dashboard`) and main `AppComponent` layout shell.
+- Adjusted Angular budget configurations in `angular.json`.
+
+## Why this feature is needed
+Provides employees with a central, interactive dashboard to monitor their leave balances, upcoming holidays, and recent leave application statuses.
+
+## Files created / modified
+- [`frontend/src/app/services/leave-balance.service.ts`](file:///d:/ELMS/frontend/src/app/services/leave-balance.service.ts)
+- [`frontend/src/app/services/leave-request.service.ts`](file:///d:/ELMS/frontend/src/app/services/leave-request.service.ts)
+- [`frontend/src/app/services/holiday.service.ts`](file:///d:/ELMS/frontend/src/app/services/holiday.service.ts)
+- [`frontend/src/app/services/leave-type.service.ts`](file:///d:/ELMS/frontend/src/app/services/leave-type.service.ts)
+- [`frontend/src/app/components/dashboard/dashboard.component.ts`](file:///d:/ELMS/frontend/src/app/components/dashboard/dashboard.component.ts)
+- [`frontend/src/app/components/dashboard/dashboard.component.html`](file:///d:/ELMS/frontend/src/app/components/dashboard/dashboard.component.html)
+- [`frontend/src/app/components/dashboard/dashboard.component.css`](file:///d:/ELMS/frontend/src/app/components/dashboard/dashboard.component.css)
+- [`frontend/src/app/app.routes.ts`](file:///d:/ELMS/frontend/src/app/app.routes.ts)
+- [`frontend/src/app/app.component.ts`](file:///d:/ELMS/frontend/src/app/app.component.ts)
+- [`frontend/src/app/app.component.html`](file:///d:/ELMS/frontend/src/app/app.component.html)
+- [`frontend/src/app/app.component.css`](file:///d:/ELMS/frontend/src/app/app.component.css)
+- [`frontend/angular.json`](file:///d:/ELMS/frontend/angular.json)
+
+## RxJS Observables & Reactive UI Cards concept
+**Reactive Dashboard Integration**: DashboardComponent calls `leaveBalanceService.getMyLeaveBalances()` and `holidayService.getUpcomingHolidays()` asynchronously, calculating percentage utilization and updating progress bar widths dynamically.
+
+## Viva explanation
+> "In Commit 21, I built the Employee Dashboard component and RxJS API services. The dashboard presents leave quota cards with visual progress bars, recent leave request status badges, and upcoming company public holidays."

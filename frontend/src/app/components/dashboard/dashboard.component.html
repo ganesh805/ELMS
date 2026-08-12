@@ -1,0 +1,121 @@
+<div class="dashboard-wrapper">
+  <!-- Welcome Banner -->
+  <div class="welcome-banner glass-card" *ngIf="currentUser">
+    <div class="banner-content">
+      <h1 class="welcome-title">
+        Welcome back, <span class="gradient-text">{{ currentUser.fullName }}</span>! 👋
+      </h1>
+      <p class="welcome-subtitle">
+        Role: <strong>{{ currentUser.role }}</strong> | Department: <strong>{{ currentUser.department || 'General' }}</strong>
+      </p>
+    </div>
+    <div class="banner-actions">
+      <a routerLink="/apply-leave" class="btn btn-primary">
+        + Apply For Leave 🌴
+      </a>
+    </div>
+  </div>
+
+  <!-- Leave Balances Section -->
+  <div class="section-title">
+    <h2>Your Leave Quotas (2026)</h2>
+    <span class="subtitle">Annual leave allocations and remaining balances</span>
+  </div>
+
+  <div class="balances-grid" *ngIf="leaveBalances.length > 0">
+    <div class="balance-card glass-card" *ngFor="let balance of leaveBalances">
+      <div class="balance-header">
+        <span class="leave-name">{{ balance.leaveTypeName }}</span>
+        <span class="badge badge-approved">{{ balance.remaining }} Days Left</span>
+      </div>
+      <div class="balance-stats">
+        <div class="stat-item">
+          <span class="stat-value">{{ balance.allocated }}</span>
+          <span class="stat-label">Allocated</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value used-value">{{ balance.used }}</span>
+          <span class="stat-label">Used</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value remaining-value">{{ balance.remaining }}</span>
+          <span class="stat-label">Remaining</span>
+        </div>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" [style.width.%]="getPercentage(balance.used, balance.allocated)"></div>
+      </div>
+      <div class="progress-label">
+        {{ getPercentage(balance.used, balance.allocated) }}% quota utilized
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Split Grid -->
+  <div class="dashboard-grid">
+    <!-- Recent Applications Table -->
+    <div class="glass-card grid-card">
+      <div class="card-header">
+        <h3>Recent Leave Applications</h3>
+        <a routerLink="/my-leaves" class="btn btn-secondary btn-sm">View All ➔</a>
+      </div>
+
+      <div class="table-container" *ngIf="recentRequests.length > 0">
+        <table class="glass-table">
+          <thead>
+            <tr>
+              <th>Leave Category</th>
+              <th>Dates</th>
+              <th>Days</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let req of recentRequests">
+              <td><strong>{{ req.leaveTypeName }}</strong></td>
+              <td>{{ req.startDate }} to {{ req.endDate }}</td>
+              <td>{{ req.numberOfDays }} day(s)</td>
+              <td>
+                <span class="badge" [ngClass]="{
+                  'badge-pending': req.status === 'PENDING',
+                  'badge-approved': req.status === 'APPROVED',
+                  'badge-rejected': req.status === 'REJECTED',
+                  'badge-cancelled': req.status === 'CANCELLED'
+                }">{{ req.status }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="empty-state" *ngIf="recentRequests.length === 0 && !isLoading">
+        <p>No recent leave applications submitted yet.</p>
+        <a routerLink="/apply-leave" class="btn btn-primary btn-sm" style="margin-top: 0.75rem;">Apply Now</a>
+      </div>
+    </div>
+
+    <!-- Upcoming Public Holidays Widget -->
+    <div class="glass-card grid-card">
+      <div class="card-header">
+        <h3>Upcoming Public Holidays 🗓️</h3>
+      </div>
+
+      <div class="holidays-list" *ngIf="upcomingHolidays.length > 0">
+        <div class="holiday-item" *ngFor="let holiday of upcomingHolidays">
+          <div class="holiday-date-badge">
+            <span class="holiday-day">{{ holiday.date | date:'dd' }}</span>
+            <span class="holiday-month">{{ holiday.date | date:'MMM' }}</span>
+          </div>
+          <div class="holiday-details">
+            <h4 class="holiday-name">{{ holiday.name }}</h4>
+            <p class="holiday-desc">{{ holiday.description || 'Company public holiday' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="upcomingHolidays.length === 0">
+        <p>No upcoming public holidays for this period.</p>
+      </div>
+    </div>
+  </div>
+</div>
