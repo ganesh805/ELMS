@@ -1,0 +1,113 @@
+<div class="my-leaves-wrapper">
+  <div class="glass-card page-card">
+    <div class="page-header">
+      <div>
+        <h2>My Leave Applications History 📋</h2>
+        <p class="subtitle">Track statuses, decision comments, and cancel pending applications</p>
+      </div>
+      <a routerLink="/apply-leave" class="btn btn-primary">+ New Leave Request</a>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      ⚠️ {{ errorMessage }}
+    </div>
+
+    <div class="alert alert-success" *ngIf="successMessage">
+      ✅ {{ successMessage }}
+    </div>
+
+    <!-- Status Filter Buttons -->
+    <div class="filter-bar">
+      <button 
+        class="filter-btn" 
+        [class.active]="selectedFilter === 'ALL'" 
+        (click)="applyFilter('ALL')">
+        All ({{ leaveRequests.length }})
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="selectedFilter === 'PENDING'" 
+        (click)="applyFilter('PENDING')">
+        Pending
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="selectedFilter === 'APPROVED'" 
+        (click)="applyFilter('APPROVED')">
+        Approved
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="selectedFilter === 'REJECTED'" 
+        (click)="applyFilter('REJECTED')">
+        Rejected
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="selectedFilter === 'CANCELLED'" 
+        (click)="applyFilter('CANCELLED')">
+        Cancelled
+      </button>
+    </div>
+
+    <!-- Requests Table -->
+    <div class="table-container" *ngIf="filteredRequests.length > 0">
+      <table class="glass-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Leave Type</th>
+            <th>Dates & Duration</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Decision Comment</th>
+            <th>Attachment</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let req of filteredRequests">
+            <td>#{{ req.id }}</td>
+            <td><strong>{{ req.leaveTypeName }}</strong></td>
+            <td>
+              <div>{{ req.startDate }} to {{ req.endDate }}</div>
+              <small class="text-muted">{{ req.numberOfDays }} Working Day(s)</small>
+            </td>
+            <td>{{ req.reason }}</td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'badge-pending': req.status === 'PENDING',
+                'badge-approved': req.status === 'APPROVED',
+                'badge-rejected': req.status === 'REJECTED',
+                'badge-cancelled': req.status === 'CANCELLED'
+              }">{{ req.status }}</span>
+            </td>
+            <td>
+              <span *ngIf="req.decisionComment">{{ req.decisionComment }}</span>
+              <span *ngIf="!req.decisionComment" class="text-muted">-</span>
+            </td>
+            <td>
+              <a *ngIf="req.attachmentFileName" [href]="getAttachmentUrl(req.attachmentFileName)" target="_blank" class="attachment-link">
+                📎 Download
+              </a>
+              <span *ngIf="!req.attachmentFileName" class="text-muted">None</span>
+            </td>
+            <td>
+              <button 
+                *ngIf="req.status === 'PENDING'" 
+                class="btn btn-danger btn-xs" 
+                (click)="cancelRequest(req.id)">
+                Cancel 🚫
+              </button>
+              <span *ngIf="req.status !== 'PENDING'" class="text-muted">-</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="empty-state" *ngIf="filteredRequests.length === 0 && !isLoading">
+      <p>No leave applications found for the selected filter.</p>
+    </div>
+  </div>
+</div>

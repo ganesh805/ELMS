@@ -619,3 +619,29 @@ Enables employees to apply for leave with dynamic working day calculations, inst
 
 ## Viva explanation
 > "In Commit 22, I built the ApplyLeaveComponent with real-time working day calculations and file upload capabilities. As the employee selects dates, the component dynamically filters weekends and public holidays, displaying net working days prior to API submission."
+
+---
+
+# Commit 23 — feat: implement my leave requests history component
+
+## What I built
+- Built standalone `MyLeavesComponent` displaying a filterable history table of personal leave applications.
+- Added status filter buttons (`ALL`, `PENDING`, `APPROVED`, `REJECTED`, `CANCELLED`).
+- Added action button for canceling pending leave requests (`PUT /api/leaves/{id}/cancel`).
+- Integrated medical attachment download links.
+- Configured `/my-leaves` route in `app.routes.ts`.
+
+## Why this feature is needed
+Enables employees to review their complete application history, check manager decision comments, download medical certificates, and cancel pending applications.
+
+## Files created / modified
+- [`frontend/src/app/components/my-leaves/my-leaves.component.ts`](file:///d:/ELMS/frontend/src/app/components/my-leaves/my-leaves.component.ts)
+- [`frontend/src/app/components/my-leaves/my-leaves.component.html`](file:///d:/ELMS/frontend/src/app/components/my-leaves/my-leaves.component.html)
+- [`frontend/src/app/components/my-leaves/my-leaves.component.css`](file:///d:/ELMS/frontend/src/app/components/my-leaves/my-leaves.component.css)
+- [`frontend/src/app/app.routes.ts`](file:///d:/ELMS/frontend/src/app/app.routes.ts)
+
+## Single Page History Filtering concept
+**Client-Side In-Memory Filtering**: `applyFilter(filter)` filters the in-memory array of requests without issuing extra network calls, providing instant UI response when clicking status badges.
+
+## Viva explanation
+> "In Commit 23, I built the MyLeavesComponent for personal leave history management. It includes status filter pills, manager decision comments, attachment download links, and a cancel action for pending requests."
