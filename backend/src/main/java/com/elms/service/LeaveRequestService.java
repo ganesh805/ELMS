@@ -2,13 +2,16 @@ package com.elms.service;
 
 import com.elms.dto.request.LeaveCreateDTO;
 import com.elms.dto.response.LeaveRequestDTO;
+import com.elms.entity.LeaveBalance;
 import com.elms.entity.LeaveRequest;
 import com.elms.entity.LeaveType;
 import com.elms.entity.User;
 import com.elms.entity.enums.LeaveStatus;
 import com.elms.exception.BusinessRuleException;
+import com.elms.exception.InsufficientLeaveBalanceException;
 import com.elms.exception.ResourceNotFoundException;
 import com.elms.mapper.EntityMapper;
+import com.elms.repository.LeaveBalanceRepository;
 import com.elms.repository.LeaveRequestRepository;
 import com.elms.repository.LeaveTypeRepository;
 import com.elms.repository.UserRepository;
@@ -27,6 +30,7 @@ public class LeaveRequestService {
     private final LeaveRequestRepository leaveRequestRepository;
     private final UserRepository userRepository;
     private final LeaveTypeRepository leaveTypeRepository;
+    private final LeaveBalanceRepository leaveBalanceRepository;
     private final WorkingDayService workingDayService;
 
     @Transactional
@@ -60,6 +64,16 @@ public class LeaveRequestService {
         int workingDays = workingDayService.calculateWorkingDays(dto.getStartDate(), dto.getEndDate());
         if (workingDays == 0) {
             throw new BusinessRuleException("Selected date range contains no working days (weekends or public holidays)");
+        }
+
+        int leaveYear = dto.getStartDate().getYear();
+        LeaveBalance balance = leaveBalanceRepository.findByUserIdAndLeaveTypeIdAndYear(userId, dto.getLeaveTypeId(), leaveYear)
+                .orElseThrow(() -> new BusinessRuleException("No leave balance allocated for this leave type in year " + leaveYear));
+
+        if (workingDays > balance.getRemaining()) {
+            throw new InsufficientLeaveBalanceException(
+                    String.format("Requested leave duration (%d days) exceeds remaining balance (%d days)",
+                            workingDays, balance.getRemaining()));
         }
 
         LeaveRequest leaveRequest = LeaveRequest.builder()

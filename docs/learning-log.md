@@ -270,3 +270,29 @@ Business Rule 2 strictly forbids double-booking leave dates for an employee if a
 
 ## Viva explanation
 > "In Commit 09, I implemented Business Rule 2 to prevent leave overlaps. The query checks if any PENDING or APPROVED request overlaps with the requested start and end dates. If found, a BusinessRuleException is thrown."
+
+---
+
+# Commit 10 — feat: implement leave balance validation
+
+## What I built
+- Implemented **Business Rule 3** (Leave Balance Validation) in `LeaveRequestService`.
+- Queried `LeaveBalance` for `(userId, leaveTypeId, year)`.
+- Rejects leave applications where `requestedWorkingDays > balance.getRemaining()` by throwing `InsufficientLeaveBalanceException`.
+- Handled `InsufficientLeaveBalanceException` in `GlobalExceptionHandler` returning `400 Bad Request`.
+- Added unit tests in `LeaveRequestServiceTest` verifying balance validation logic.
+
+## Why this feature is needed
+Business Rule 3 ensures an employee cannot request more leave days than their remaining quota for that leave type and year.
+
+## Files created / modified
+- [`backend/src/main/java/com/elms/exception/InsufficientLeaveBalanceException.java`](file:///d:/ELMS/backend/src/main/java/com/elms/exception/InsufficientLeaveBalanceException.java)
+- [`backend/src/main/java/com/elms/service/LeaveRequestService.java`](file:///d:/ELMS/backend/src/main/java/com/elms/service/LeaveRequestService.java)
+- [`backend/src/main/java/com/elms/exception/GlobalExceptionHandler.java`](file:///d:/ELMS/backend/src/main/java/com/elms/exception/GlobalExceptionHandler.java)
+- [`backend/src/test/java/com/elms/service/LeaveRequestServiceTest.java`](file:///d:/ELMS/backend/src/test/java/com/elms/service/LeaveRequestServiceTest.java)
+
+## Business Rule concept
+**Quota Enforcing**: Verifying `requestedDays <= remainingBalance` prevents negative leave balances from being submitted into the approval queue.
+
+## Viva explanation
+> "In Commit 10, I implemented Business Rule 3 to validate leave balances before request submission. The service fetches the employee's LeaveBalance for the target year and throws an InsufficientLeaveBalanceException if requested days exceed remaining quota."

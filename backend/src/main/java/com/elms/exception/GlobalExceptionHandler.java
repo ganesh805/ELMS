@@ -27,8 +27,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    @ExceptionHandler(BusinessRuleException.class)
-    public ResponseEntity<ErrorResponseDTO> handleBusinessRule(BusinessRuleException ex, HttpServletRequest request) {
+    @ExceptionHandler({BusinessRuleException.class, InsufficientLeaveBalanceException.class})
+    public ResponseEntity<ErrorResponseDTO> handleBusinessRule(RuntimeException ex, HttpServletRequest request) {
         ErrorResponseDTO error = ErrorResponseDTO.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
