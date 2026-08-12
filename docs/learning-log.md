@@ -645,3 +645,27 @@ Enables employees to review their complete application history, check manager de
 
 ## Viva explanation
 > "In Commit 23, I built the MyLeavesComponent for personal leave history management. It includes status filter pills, manager decision comments, attachment download links, and a cancel action for pending requests."
+
+---
+
+# Commit 24 — feat: implement manager pending approvals component
+
+## What I built
+- Built standalone `PendingApprovalsComponent` for line managers to review leave applications submitted by direct report team members.
+- Created decision modal dialog for submitting feedback comments and approving (`PUT /api/leaves/{id}/approve`) or rejecting (`PUT /api/leaves/{id}/reject`) applications.
+- Configured `/pending-approvals` route in `app.routes.ts`.
+
+## Why this feature is needed
+Enables managers to process pending leave applications, enforce project workload constraints, and submit decision comments.
+
+## Files created / modified
+- [`frontend/src/app/components/pending-approvals/pending-approvals.component.ts`](file:///d:/ELMS/frontend/src/app/components/pending-approvals/pending-approvals.component.ts)
+- [`frontend/src/app/components/pending-approvals/pending-approvals.component.html`](file:///d:/ELMS/frontend/src/app/components/pending-approvals/pending-approvals.component.html)
+- [`frontend/src/app/components/pending-approvals/pending-approvals.component.css`](file:///d:/ELMS/frontend/src/app/components/pending-approvals/pending-approvals.component.css)
+- [`frontend/src/app/app.routes.ts`](file:///d:/ELMS/frontend/src/app/app.routes.ts)
+
+## Manager Decision Workflow concept
+**Modal Dialog & State Machine Enforcement**: Clicking "Review & Decide" opens a glassmorphism modal where managers input feedback. Submitting the decision invokes `approveLeaveRequest` or `rejectLeaveRequest`, triggering backend state transitions and balance updates.
+
+## Viva explanation
+> "In Commit 24, I built the PendingApprovalsComponent for line managers. Managers can view pending applications from direct report team members, open a decision modal to write feedback comments, and approve or reject applications."

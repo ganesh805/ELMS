@@ -1,0 +1,112 @@
+<div class="pending-approvals-wrapper">
+  <div class="glass-card page-card">
+    <div class="page-header">
+      <div>
+        <h2>Pending Team Approvals ⏳</h2>
+        <p class="subtitle">Review, approve, or reject leave applications from your direct report team members</p>
+      </div>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      ⚠️ {{ errorMessage }}
+    </div>
+
+    <div class="alert alert-success" *ngIf="successMessage">
+      ✅ {{ successMessage }}
+    </div>
+
+    <div class="table-container" *ngIf="pendingRequests.length > 0">
+      <table class="glass-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Employee</th>
+            <th>Leave Type</th>
+            <th>Dates & Days</th>
+            <th>Reason</th>
+            <th>Attachment</th>
+            <th>Applied On</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let req of pendingRequests">
+            <td>#{{ req.id }}</td>
+            <td>
+              <div><strong>{{ req.userName }}</strong></div>
+              <small class="text-muted">{{ req.department || 'Engineering' }}</small>
+            </td>
+            <td>{{ req.leaveTypeName }}</td>
+            <td>
+              <div>{{ req.startDate }} to {{ req.endDate }}</div>
+              <small class="text-muted">{{ req.numberOfDays }} Working Day(s)</small>
+            </td>
+            <td>{{ req.reason }}</td>
+            <td>
+              <a *ngIf="req.attachmentFileName" [href]="getAttachmentUrl(req.attachmentFileName)" target="_blank" class="attachment-link">
+                📎 Attachment
+              </a>
+              <span *ngIf="!req.attachmentFileName" class="text-muted">None</span>
+            </td>
+            <td>{{ req.appliedOn | date:'mediumDate' }}</td>
+            <td>
+              <button class="btn btn-primary btn-xs" (click)="openDecisionModal(req)">
+                Review & Decide 💬
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="empty-state" *ngIf="pendingRequests.length === 0 && !isLoading">
+      <p>🎉 All pending team leave applications have been reviewed!</p>
+    </div>
+  </div>
+</div>
+
+<!-- Review & Decision Modal -->
+<div class="modal-overlay" *ngIf="selectedRequest">
+  <div class="modal-card glass-card">
+    <div class="modal-header">
+      <h3>Review Application #{{ selectedRequest.id }}</h3>
+      <button class="close-btn" (click)="closeDecisionModal()">✖</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="info-row">
+        <span class="info-label">Applicant:</span>
+        <span class="info-value">{{ selectedRequest.userName }} ({{ selectedRequest.userEmail }})</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Leave Category:</span>
+        <span class="info-value">{{ selectedRequest.leaveTypeName }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Requested Dates:</span>
+        <span class="info-value">{{ selectedRequest.startDate }} to {{ selectedRequest.endDate }} ({{ selectedRequest.numberOfDays }} working days)</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Reason:</span>
+        <span class="info-value">{{ selectedRequest.reason }}</span>
+      </div>
+
+      <div class="form-group" style="margin-top: 1.25rem;">
+        <label class="form-label" for="decisionComment">Decision Comment / Feedback</label>
+        <textarea 
+          id="decisionComment" 
+          name="decisionComment" 
+          rows="3" 
+          class="form-control" 
+          [(ngModel)]="decisionComment" 
+          placeholder="Provide approval instructions or rejection reasons..."></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeDecisionModal()" [disabled]="isProcessing">Cancel</button>
+      <button class="btn btn-danger" (click)="rejectRequest()" [disabled]="isProcessing">Reject Request ❌</button>
+      <button class="btn btn-success" (click)="approveRequest()" [disabled]="isProcessing">Approve Request ✅</button>
+    </div>
+  </div>
+</div>
