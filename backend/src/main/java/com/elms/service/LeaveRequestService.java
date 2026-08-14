@@ -70,7 +70,14 @@ public class LeaveRequestService {
 
         int leaveYear = dto.getStartDate().getYear();
         LeaveBalance balance = leaveBalanceRepository.findByUserIdAndLeaveTypeIdAndYear(userId, dto.getLeaveTypeId(), leaveYear)
-                .orElseThrow(() -> new BusinessRuleException("No leave balance allocated for this leave type in year " + leaveYear));
+                .orElseGet(() -> leaveBalanceRepository.save(LeaveBalance.builder()
+                        .user(user)
+                        .leaveType(leaveType)
+                        .year(leaveYear)
+                        .allocated(leaveType.getDefaultAnnualQuota())
+                        .used(0)
+                        .remaining(leaveType.getDefaultAnnualQuota())
+                        .build()));
 
         if (workingDays > balance.getRemaining()) {
             throw new InsufficientLeaveBalanceException(

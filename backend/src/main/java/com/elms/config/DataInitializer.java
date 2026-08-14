@@ -30,7 +30,15 @@ public class DataInitializer implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
         if (userRepository.count() > 0) {
-            log.info("System initialized. Skipping seed creation.");
+            // Clean up any extra sample users so strictly 1 HR Admin login exists
+            userRepository.findAll().stream()
+                    .filter(u -> !"admin@elms.com".equalsIgnoreCase(u.getEmail()))
+                    .forEach(u -> {
+                        leaveRequestRepository.findByUserId(u.getId()).forEach(leaveRequestRepository::delete);
+                        leaveBalanceRepository.findByUserIdAndYear(u.getId(), 2026).forEach(leaveBalanceRepository::delete);
+                        userRepository.delete(u);
+                    });
+            log.info("System initialized with single HR Admin account: admin@elms.com");
             return;
         }
 

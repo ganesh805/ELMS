@@ -202,4 +202,20 @@ export class AdminUsersComponent implements OnInit {
       }
     });
   }
+
+  deleteUser(user: AdminUser): void {
+    if (confirm(`Are you sure you want to delete user ${user.fullName} (${user.email})?`)) {
+      this.http.delete(`${this.apiUrl}/admin/users/${user.id}`).subscribe({
+        next: () => {
+          this.successMessage = `User ${user.fullName} deleted successfully!`;
+          this.loadUsers();
+          setTimeout(() => (this.successMessage = ''), 3000);
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Failed to delete user';
+          setTimeout(() => (this.errorMessage = ''), 3000);
+        }
+      });
+    }
+  }
 }

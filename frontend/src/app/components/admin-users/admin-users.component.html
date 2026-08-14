@@ -55,6 +55,9 @@
                 <button class="btn btn-primary btn-xs" (click)="openAdjustBalanceModal(user)">
                   💳 Adjust Balance
                 </button>
+                <button class="btn btn-danger btn-xs" (click)="deleteUser(user)" *ngIf="user.email !== 'admin@elms.com'">
+                  🗑️ Delete User
+                </button>
               </div>
             </td>
           </tr>

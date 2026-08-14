@@ -43,6 +43,12 @@ public class AdminController {
         return ResponseEntity.ok(updated);
     }
 
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long userId) {
+        adminUserService.deleteUser(userId);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/leave-types")
     public ResponseEntity<LeaveTypeDTO> createLeaveType(@Valid @RequestBody LeaveTypeCreateDTO dto) {
         LeaveTypeDTO created = leaveTypeService.createLeaveType(dto);

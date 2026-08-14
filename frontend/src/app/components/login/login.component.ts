@@ -12,8 +12,8 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  email: string = 'employee1@elms.com';
-  password: string = 'employee123';
+  email: string = 'admin@elms.com';
+  password: string = 'admin123';
   errorMessage: string = '';
   isLoading: boolean = false;
 
@@ -41,11 +41,5 @@ export class LoginComponent {
         this.errorMessage = err.error?.message || 'Invalid credentials or login failed';
       }
     });
-  }
-
-  quickLogin(email: string, pass: string): void {
-    this.email = email;
-    this.password = pass;
-    this.onLogin();
   }
 }

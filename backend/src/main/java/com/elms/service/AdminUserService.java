@@ -10,6 +10,7 @@ import com.elms.exception.BusinessRuleException;
 import com.elms.exception.ResourceNotFoundException;
 import com.elms.mapper.EntityMapper;
 import com.elms.repository.LeaveBalanceRepository;
+import com.elms.repository.LeaveRequestRepository;
 import com.elms.repository.LeaveTypeRepository;
 import com.elms.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class AdminUserService {
     private final UserRepository userRepository;
     private final LeaveTypeRepository leaveTypeRepository;
     private final LeaveBalanceRepository leaveBalanceRepository;
+    private final LeaveRequestRepository leaveRequestRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
@@ -101,5 +103,32 @@ public class AdminUserService {
 
         User updatedUser = userRepository.save(user);
         return EntityMapper.toUserDTO(updatedUser);
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+
+        if ("admin@elms.com".equalsIgnoreCase(user.getEmail())) {
+            throw new BusinessRuleException("The default HR Admin baseline account cannot be deleted");
+        }
+
+        // Remove manager reference for direct reports
+        userRepository.findAll().stream()
+                .filter(u -> u.getManager() != null && u.getManager().getId().equals(userId))
+                .forEach(u -> {
+                    u.setManager(null);
+                    userRepository.save(u);
+                });
+
+        // Delete user's leave balances and leave requests
+        leaveBalanceRepository.findAll().stream()
+                .filter(b -> b.getUser().getId().equals(userId))
+                .forEach(leaveBalanceRepository::delete);
+
+        leaveRequestRepository.findByUserId(userId).forEach(leaveRequestRepository::delete);
+
+        userRepository.delete(user);
     }
 }

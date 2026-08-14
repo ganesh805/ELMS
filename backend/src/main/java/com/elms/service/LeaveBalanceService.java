@@ -26,12 +26,27 @@ public class LeaveBalanceService {
     private final UserRepository userRepository;
     private final LeaveTypeRepository leaveTypeRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<LeaveBalanceDTO> getUserLeaveBalances(Long userId, Integer year) {
-        if (!userRepository.existsById(userId)) {
-            throw new ResourceNotFoundException("User not found with id: " + userId);
-        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
         int targetYear = (year != null) ? year : LocalDate.now().getYear();
+
+        List<LeaveType> activeLeaveTypes = leaveTypeRepository.findByActiveTrue();
+        for (LeaveType leaveType : activeLeaveTypes) {
+            Optional<LeaveBalance> existing = leaveBalanceRepository.findByUserIdAndLeaveTypeIdAndYear(userId, leaveType.getId(), targetYear);
+            if (existing.isEmpty()) {
+                leaveBalanceRepository.save(LeaveBalance.builder()
+                        .user(user)
+                        .leaveType(leaveType)
+                        .year(targetYear)
+                        .allocated(leaveType.getDefaultAnnualQuota())
+                        .used(0)
+                        .remaining(leaveType.getDefaultAnnualQuota())
+                        .build());
+            }
+        }
+
         return leaveBalanceRepository.findByUserIdAndYear(userId, targetYear).stream()
                 .map(EntityMapper::toLeaveBalanceDTO)
                 .toList();
