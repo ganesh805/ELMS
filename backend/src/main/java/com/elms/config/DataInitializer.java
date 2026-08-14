@@ -30,14 +30,41 @@ public class DataInitializer implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
         if (userRepository.count() > 0) {
-            // Clean up any extra sample users so strictly 1 HR Admin login exists
+            // Step 1: Delete all leave requests and leave balances to prevent FK constraint failures
+            leaveRequestRepository.deleteAll();
+            leaveBalanceRepository.deleteAll();
+
+            // Step 2: Clear manager references on all users
+            userRepository.findAll().forEach(u -> {
+                if (u.getManager() != null) {
+                    u.setManager(null);
+                    userRepository.save(u);
+                }
+            });
+
+            // Step 3: Remove extra non-admin users
             userRepository.findAll().stream()
                     .filter(u -> !"admin@elms.com".equalsIgnoreCase(u.getEmail()))
-                    .forEach(u -> {
-                        leaveRequestRepository.findByUserId(u.getId()).forEach(leaveRequestRepository::delete);
-                        leaveBalanceRepository.findByUserIdAndYear(u.getId(), 2026).forEach(leaveBalanceRepository::delete);
-                        userRepository.delete(u);
-                    });
+                    .forEach(userRepository::delete);
+
+            // Step 4: Ensure admin@elms.com has 2026 leave balances initialized
+            User admin = userRepository.findByEmail("admin@elms.com").orElse(null);
+            if (admin != null) {
+                int currentYear = 2026;
+                leaveTypeRepository.findByActiveTrue().forEach(type -> {
+                    if (leaveBalanceRepository.findByUserIdAndLeaveTypeIdAndYear(admin.getId(), type.getId(), currentYear).isEmpty()) {
+                        leaveBalanceRepository.save(LeaveBalance.builder()
+                                .user(admin)
+                                .leaveType(type)
+                                .year(currentYear)
+                                .allocated(type.getDefaultAnnualQuota())
+                                .used(0)
+                                .remaining(type.getDefaultAnnualQuota())
+                                .build());
+                    }
+                });
+            }
+
             log.info("System initialized with single HR Admin account: admin@elms.com");
             return;
         }

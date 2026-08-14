@@ -9,8 +9,11 @@
 .login-card {
   width: 100%;
   max-width: 440px;
-  padding: 2.5rem 2rem;
+  padding: 2.5rem 2.25rem;
   border-radius: var(--radius-xl);
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
 }
 
 .login-header {
@@ -18,30 +21,33 @@
   margin-bottom: 2rem;
 }
 
-.logo-circle {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
-  display: inline-block;
-  animation: float 3s ease-in-out infinite;
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.25rem;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+.login-logo-img {
+  height: 64px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
 }
 
 .login-title {
-  font-size: 1.75rem;
+  font-size: 1.85rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #6366f1, #06b6d4);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
 }
 
 .login-subtitle {
   font-size: 0.875rem;
   color: var(--text-muted);
   margin-top: 0.25rem;
+  font-weight: 500;
 }
 
 .alert {
@@ -60,32 +66,6 @@
 .btn-block {
   width: 100%;
   padding: 0.85rem;
-  margin-top: 0.5rem;
-}
-
-.demo-accounts-section {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--card-border);
-  text-align: center;
-}
-
-.demo-title {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  margin-bottom: 0.75rem;
-}
-
-.demo-buttons {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
-}
-
-.btn-xs {
-  padding: 0.4rem 0.6rem;
-  font-size: 0.75rem;
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
 }
