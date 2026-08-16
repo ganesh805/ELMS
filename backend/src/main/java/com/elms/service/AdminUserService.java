@@ -89,6 +89,12 @@ public class AdminUserService {
         if (dto.getFullName() != null && !dto.getFullName().isBlank()) {
             user.setFullName(dto.getFullName());
         }
+        if (dto.getEmail() != null && !dto.getEmail().isBlank() && !dto.getEmail().equalsIgnoreCase(user.getEmail())) {
+            if (userRepository.existsByEmail(dto.getEmail())) {
+                throw new BusinessRuleException("User with email " + dto.getEmail() + " already exists");
+            }
+            user.setEmail(dto.getEmail());
+        }
         if (dto.getRole() != null) {
             user.setRole(dto.getRole());
         }
@@ -99,6 +105,8 @@ public class AdminUserService {
             User manager = userRepository.findById(dto.getManagerId())
                     .orElseThrow(() -> new ResourceNotFoundException("Manager not found with id: " + dto.getManagerId()));
             user.setManager(manager);
+        } else {
+            user.setManager(null);
         }
 
         User updatedUser = userRepository.save(user);

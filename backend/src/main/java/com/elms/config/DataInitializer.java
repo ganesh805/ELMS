@@ -82,42 +82,52 @@ public class DataInitializer implements CommandLineRunner {
                 .build());
 
         // Baseline Leave Categories
-        LeaveType annualLeave = leaveTypeRepository.save(LeaveType.builder()
-                .name("Annual Leave")
-                .defaultAnnualQuota(18)
-                .description("Paid annual leave quota for vacation and rest")
-                .active(true)
-                .requiresApproval(true)
-                .build());
+        LeaveType annualLeave = leaveTypeRepository.findByName("Annual Leave").orElseGet(() ->
+                leaveTypeRepository.save(LeaveType.builder()
+                        .name("Annual Leave")
+                        .defaultAnnualQuota(18)
+                        .description("Paid annual leave quota for vacation and rest")
+                        .active(true)
+                        .requiresApproval(true)
+                        .build())
+        );
 
-        LeaveType sickLeave = leaveTypeRepository.save(LeaveType.builder()
-                .name("Sick Leave")
-                .defaultAnnualQuota(12)
-                .description("Medical and health leave")
-                .active(true)
-                .requiresApproval(true)
-                .build());
+        LeaveType sickLeave = leaveTypeRepository.findByName("Sick Leave").orElseGet(() ->
+                leaveTypeRepository.save(LeaveType.builder()
+                        .name("Sick Leave")
+                        .defaultAnnualQuota(12)
+                        .description("Medical and health leave")
+                        .active(true)
+                        .requiresApproval(true)
+                        .build())
+        );
 
-        LeaveType casualLeave = leaveTypeRepository.save(LeaveType.builder()
-                .name("Casual Leave")
-                .defaultAnnualQuota(6)
-                .description("Urgent short personal leave")
-                .active(true)
-                .requiresApproval(true)
-                .build());
+        LeaveType casualLeave = leaveTypeRepository.findByName("Casual Leave").orElseGet(() ->
+                leaveTypeRepository.save(LeaveType.builder()
+                        .name("Casual Leave")
+                        .defaultAnnualQuota(6)
+                        .description("Urgent short personal leave")
+                        .active(true)
+                        .requiresApproval(true)
+                        .build())
+        );
 
         // Baseline Company Holidays
-        holidayRepository.save(Holiday.builder()
-                .date(LocalDate.of(2026, 1, 1))
-                .name("New Year's Day")
-                .description("Public holiday")
-                .build());
+        if (!holidayRepository.existsByDate(LocalDate.of(2026, 1, 1))) {
+            holidayRepository.save(Holiday.builder()
+                    .date(LocalDate.of(2026, 1, 1))
+                    .name("New Year's Day")
+                    .description("Public holiday")
+                    .build());
+        }
 
-        holidayRepository.save(Holiday.builder()
-                .date(LocalDate.of(2026, 8, 15))
-                .name("Independence Day")
-                .description("National holiday")
-                .build());
+        if (!holidayRepository.existsByDate(LocalDate.of(2026, 8, 15))) {
+            holidayRepository.save(Holiday.builder()
+                    .date(LocalDate.of(2026, 8, 15))
+                    .name("Independence Day")
+                    .description("National holiday")
+                    .build());
+        }
 
         // Automatically assign baseline balances for HR Admin
         int currentYear = 2026;

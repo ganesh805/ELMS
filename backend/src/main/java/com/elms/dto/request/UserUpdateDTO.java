@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class UserUpdateDTO {
     private String fullName;
+    private String email;
     private Role role;
     private String department;
     private Long managerId;
