@@ -24,7 +24,7 @@
 
 ---
 
-##  Live Production URLs
+## 🌐 Live Production URLs
 
 | Component | Platform | URL / Location |
 | :--- | :--- | :--- |
@@ -35,7 +35,21 @@
 
 ---
 
-##  Key Features & Capstone Requirements
+## 🗄️ Database Artifacts
+- **MySQL 8.4 Schema Script**: [https://github.com/ganesh805/ELMS/blob/main/database/schema.sql](https://github.com/ganesh805/ELMS/blob/main/database/schema.sql)
+- **MySQL 8.4 Baseline Seed Script**: [https://github.com/ganesh805/ELMS/blob/main/database/seed.sql](https://github.com/ganesh805/ELMS/blob/main/database/seed.sql)
+- **Documented Startup Seeder**: [`DataInitializer.java`](file:///d:/ELMS/backend/src/main/java/com/elms/config/DataInitializer.java)
+
+---
+
+## 📚 API Documentation
+- **Interactive Swagger UI**: [https://elms-mhk7.onrender.com/swagger-ui/index.html](https://elms-mhk7.onrender.com/swagger-ui/index.html) *(Redirect: [https://elms-mhk7.onrender.com/docs](https://elms-mhk7.onrender.com/docs))*
+- **Direct OpenAPI 3 JSON**: [https://elms-mhk7.onrender.com/v3/api-docs](https://elms-mhk7.onrender.com/v3/api-docs)
+- **API Contract Specification**: [https://github.com/ganesh805/ELMS/blob/main/docs/api.md](https://github.com/ganesh805/ELMS/blob/main/docs/api.md)
+
+---
+
+## 🌟 Key Features & Capstone Requirements
 - **Vista Tech Corporate UI**: Custom modern dark glassmorphism design system integrated with official Vista Tech branding.
 - **Dynamic Working Day Engine (Rule 1)**: Calculates net leave duration by excluding Saturdays, Sundays, and registered company public holidays automatically.
 - **Leave Overlap Prevention (Rule 2)**: Rejects double-booking leave dates for the same employee.
@@ -48,7 +62,7 @@
 
 ---
 
-##  Technology Stack & Versions
+## 🛠️ Technology Stack & Versions
 - **Backend**: Java 21 LTS, Spring Boot 3.3.2, Spring Data JPA, Spring Security, JJWT 0.12.5, Lombok, Slf4j.
 - **Frontend**: Angular 17 (Standalone Components, RxJS, TypeScript 5, Custom Glassmorphism Design System).
 - **Database**: MySQL 8.4 LTS (`elms_db`).
@@ -56,7 +70,7 @@
 
 ---
 
-##  Execution & Run Commands
+## 🚀 Execution & Run Commands
 
 ### 1. Database Setup (MySQL 8.4)
 Create local database:
@@ -89,7 +103,7 @@ npm start
 
 ---
 
-##  Initial Baseline System Admin Account
+## 🔑 Initial Baseline System Admin Account
 Upon initial application startup, the system automatically initializes a clean baseline HR Admin account:
 - **Email**: `admin@elms.com`
 - **Password**: `admin123`
@@ -99,14 +113,14 @@ Upon initial application startup, the system automatically initializes a clean b
 
 ---
 
-##  Note on Access-Control Simplification & Security Architecture (PDF §4 & §15)
+## 🔒 Note on Access-Control Simplification & Security Architecture (PDF §4 & §15)
 In accordance with capstone requirements:
 - The system supports both **Header-Based Authorization (`X-User-Id`)** for lightweight role/ownership checks and **Spring Security JWT Authentication** with BCrypt password hashing (*Headline Bonus Goal*).
 - Backend service layers enforce strict ownership and reporting-line checks so managers cannot approve requests outside their direct report hierarchy, and employees cannot modify another user's leave applications.
 
 ---
 
-##  Running Automated Tests
+## 🧪 Running Automated Tests
 - **Backend Unit & Integration Tests**:
   ```powershell
   cd backend
@@ -120,7 +134,7 @@ In accordance with capstone requirements:
 
 ---
 
-##  Complete Project Documentation Index
+## 📚 Complete Project Documentation Index
 - [`docs/learning-log.md`](file:///d:/ELMS/docs/learning-log.md): Commit-by-commit development and concept log across all 30 commits.
 - [`docs/viva-preparation.md`](file:///d:/ELMS/docs/viva-preparation.md): Top 50 viva Q&As and live coding refactoring tasks.
 - [`docs/architecture.md`](file:///d:/ELMS/docs/architecture.md): System architecture, tech stack, and layered design.
@@ -128,3 +142,4 @@ In accordance with capstone requirements:
 - [`docs/database.md`](file:///d:/ELMS/docs/database.md): MySQL 8.4 schema dictionary and ERD diagram.
 - [`docs/business-rules.md`](file:///d:/ELMS/docs/business-rules.md): Core business rules & validation logic.
 - [`docs/capstone-project-report.md`](file:///d:/ELMS/docs/capstone-project-report.md): Final capstone project completion report.
+- [`docs/candidate-declaration.md`](file:///d:/ELMS/docs/candidate-declaration.md): Signed Appendix A Candidate Declaration for Karanam Ganesh.
