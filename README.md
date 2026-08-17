@@ -1,16 +1,43 @@
 # Vista Tech — Employee Leave Management System (ELMS)
 
-**Vista Tech ELMS** is an enterprise-grade full-stack Employee Leave Management System built with **Spring Boot 3.3.2 (Java 21 LTS)** and **Angular 17 (Standalone Components)** with **MySQL 8.4 LTS**.
+**Vista Tech ELMS** is a full-stack, enterprise-grade Employee Leave Management System built using **Spring Boot 3.3.2 (Java 21 LTS)** and **Angular 17 (Standalone Components)** with **MySQL 8.4 LTS**.
 
 ---
 
-## 🌟 Key System Features & Business Rules
-- **Vista Tech Corporate Branding**: Custom modern dark glassmorphism design system integrated with official Vista Tech branding.
-- **Dynamic Working Day Engine (Rule 1)**: Calculates net requested leave duration by automatically excluding Saturdays, Sundays, and registered company public holidays.
-- **Leave Overlap Prevention (Rule 2)**: Prevents double-booking leave dates for the same employee.
-- **Quota & Balance Enforcement (Rule 3)**: Enforces remaining leave balance constraints before request submission.
-- **Manager Approval Workflow (Rule 6 & 7)**: Managers review pending team requests, submit feedback comments, and trigger automatic balance deductions upon approval.
-- **HR Admin Control Panel**: HR Administrators manage user accounts, assign line managers, override leave quotas, configure leave categories (with soft delete), and register company holidays.
+## 📸 Application Screenshots & Visual Showcase
+
+### 1. Vista Tech Sign-In Screen
+![Vista Tech Login Screen](docs/images/login-screen.png)
+
+### 2. HR Admin Control Center & Quota Overview
+![HR Admin Dashboard](docs/images/hr-admin-dashboard.png)
+
+### 3. Line Manager Team Management Dashboard
+![Manager Dashboard](docs/images/manager-dashboard.png)
+
+### 4. Interactive Working Day Leave Application Form
+![Apply Leave Form](docs/images/apply-leave-form.png)
+
+---
+
+## 🌐 Live Production URLs
+
+| Component | Platform | URL / Location |
+| :--- | :--- | :--- |
+| **Live Web App (Frontend)** | Vercel | **[https://elms-snowy.vercel.app](https://elms-snowy.vercel.app)** |
+| **Live REST API (Backend)** | Render | **[https://elms-mhk7.onrender.com/api](https://elms-mhk7.onrender.com/api)** |
+| **Cloud MySQL 8.4 Database** | Aiven | `defaultdb` |
+| **Source Code Repository** | GitHub | **[https://github.com/ganesh805/ELMS.git](https://github.com/ganesh805/ELMS.git)** |
+
+---
+
+## 🌟 Key Features & Capstone Requirements
+- **Vista Tech Corporate UI**: Custom modern dark glassmorphism design system integrated with official Vista Tech branding.
+- **Dynamic Working Day Engine (Rule 1)**: Calculates net leave duration by excluding Saturdays, Sundays, and registered company public holidays automatically.
+- **Leave Overlap Prevention (Rule 2)**: Rejects double-booking leave dates for the same employee.
+- **Quota & Balance Enforcement (Rule 3)**: Validates remaining leave balance prior to request submission.
+- **Manager Approval Workflow (Rule 6 & 7)**: Managers review pending team applications, submit feedback comments, and trigger automatic balance deductions upon approval.
+- **HR Administrative Control Panel**: HR Admins can create user accounts, edit details, assign line managers, override yearly quotas, configure leave categories (with soft delete), and register company holidays.
 - **Asynchronous Email Notifications**: Non-blocking `@Async` notifications sent upon leave submission, approval, or rejection.
 - **Spring Security & JWT Authentication**: Stateless authentication with HMAC-SHA384 JWT tokens and BCrypt password encryption (*PDF §15 Headline Bonus Achieved*).
 - **Interactive API Documentation**: Swagger UI specs accessible at `http://localhost:8080/swagger-ui/index.html`.
@@ -19,7 +46,7 @@
 
 ## 🛠️ Technology Stack & Versions
 - **Backend**: Java 21 LTS, Spring Boot 3.3.2, Spring Data JPA, Spring Security, JJWT 0.12.5, Lombok, Slf4j.
-- **Frontend**: Angular 17 (Standalone Components, RxJS, TypeScript 5, Custom Glassmorphism UI Design System).
+- **Frontend**: Angular 17 (Standalone Components, RxJS, TypeScript 5, Custom Glassmorphism Design System).
 - **Database**: MySQL 8.4 LTS (`elms_db`).
 - **Build Tools**: Apache Maven (`mvnw.cmd`), Angular CLI (`@angular/cli@17`).
 
@@ -27,12 +54,12 @@
 
 ## 🚀 Execution & Run Commands
 
-### 1. Database Configuration (MySQL 8.4)
+### 1. Database Setup (MySQL 8.4)
 Create local database:
 ```sql
 CREATE DATABASE elms_db;
 ```
-Database credentials in `backend/src/main/resources/application-local.properties`:
+Configure database credentials in `backend/src/main/resources/application-local.properties`:
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/elms_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
 spring.datasource.username=root
@@ -40,16 +67,16 @@ spring.datasource.password=12345
 ```
 
 ### 2. Run Backend (Spring Boot 3.3.2)
-Navigate to `backend` directory and run:
+Open a terminal in the `backend` directory and run:
 ```powershell
 cd backend
 .\mvnw.cmd spring-boot:run
 ```
 - **REST API Base URL**: `http://localhost:8080/api`
-- **Swagger UI Specification**: `http://localhost:8080/swagger-ui/index.html`
+- **Swagger UI**: `http://localhost:8080/swagger-ui/index.html`
 
 ### 3. Run Frontend (Angular 17 SPA)
-In a separate terminal, navigate to `frontend` directory and run:
+Open a separate terminal in the `frontend` directory and run:
 ```powershell
 cd frontend
 npm start
@@ -58,13 +85,13 @@ npm start
 
 ---
 
-## 🔑 Default Initial Baseline Login
-Upon first startup, the database seeds 1 single baseline HR Admin account:
+## 🔑 Initial Baseline System Admin Account
+Upon initial application startup, the system automatically initializes a clean baseline HR Admin account:
 - **Email**: `admin@elms.com`
 - **Password**: `admin123`
 - **Role**: `HR_ADMIN`
 
-*(Log in as HR Admin to create employee/manager accounts and assign line managers via the `/admin/users` screen).*
+*(Log in as HR Admin to create employee/manager accounts and assign line managers via the `/admin/users` UI).*
 
 ---
 
@@ -75,13 +102,13 @@ In accordance with capstone requirements:
 
 ---
 
-## 🧪 Automated Testing Commands
+## 🧪 Running Automated Tests
 - **Backend Unit & Integration Tests**:
   ```powershell
   cd backend
   .\mvnw.cmd test
   ```
-- **Frontend Production Build**:
+- **Frontend Angular Build Verification**:
   ```powershell
   cd frontend
   npx ng build
@@ -89,10 +116,10 @@ In accordance with capstone requirements:
 
 ---
 
-## 📚 Complete Documentation Suite
+## 📚 Complete Project Documentation Index
 - [`docs/learning-log.md`](file:///d:/ELMS/docs/learning-log.md): Commit-by-commit development and concept log across all 30 commits.
-- [`docs/viva-preparation.md`](file:///d:/ELMS/docs/viva-preparation.md): 50 Top Viva Q&As and live coding refactoring tasks.
-- [`docs/architecture.md`](file:///d:/ELMS/docs/architecture.md): System architecture, technology stack, and layered design.
+- [`docs/viva-preparation.md`](file:///d:/ELMS/docs/viva-preparation.md): Top 50 viva Q&As and live coding refactoring tasks.
+- [`docs/architecture.md`](file:///d:/ELMS/docs/architecture.md): System architecture, tech stack, and layered design.
 - [`docs/api.md`](file:///d:/ELMS/docs/api.md): Complete REST API contract specification.
 - [`docs/database.md`](file:///d:/ELMS/docs/database.md): MySQL 8.4 schema dictionary and ERD diagram.
 - [`docs/business-rules.md`](file:///d:/ELMS/docs/business-rules.md): Core business rules & validation logic.
