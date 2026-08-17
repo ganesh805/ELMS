@@ -46,22 +46,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/auth/**",
-                                "/v3/api-docs/**",
-                                "/v3/api-docs",
-                                "/api-docs/**",
-                                "/api-docs",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/swagger-resources/**",
-                                "/webjars/**",
-                                "/docs",
-                                "/swagger"
-                        ).permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("HR_ADMIN")
                         .requestMatchers("/api/leaves/pending", "/api/leaves/team", "/api/leaves/*/approve", "/api/leaves/*/reject").hasAnyRole("MANAGER", "HR_ADMIN")
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/leaves/**", "/api/leave-types/**", "/api/holidays/**", "/api/leave-balances/**").authenticated()
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
