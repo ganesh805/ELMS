@@ -58,6 +58,16 @@ public class EmployeeLeaveController {
     }
 
     @GetMapping("/attachments/{fileName:.+}")
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Download leave application attachment file",
+        responses = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "200",
+                description = "File stream download",
+                content = @io.swagger.v3.oas.annotations.media.Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+            )
+        }
+    )
     public ResponseEntity<Resource> downloadAttachment(@PathVariable("fileName") String fileName) {
         Resource resource = attachmentService.loadFileAsResource(fileName);
         return ResponseEntity.ok()
