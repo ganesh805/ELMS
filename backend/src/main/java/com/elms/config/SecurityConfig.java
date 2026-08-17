@@ -55,7 +55,9 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/swagger-resources/**",
-                                "/webjars/**"
+                                "/webjars/**",
+                                "/docs",
+                                "/swagger"
                         ).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("HR_ADMIN")
                         .requestMatchers("/api/leaves/pending", "/api/leaves/team", "/api/leaves/*/approve", "/api/leaves/*/reject").hasAnyRole("MANAGER", "HR_ADMIN")
