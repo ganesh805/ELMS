@@ -1,5 +1,6 @@
 package com.elms.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -20,5 +21,6 @@ public class BalanceAdjustDTO {
 
     @NotNull(message = "Allocated quota is required")
     @Min(value = 0, message = "Allocated quota cannot be negative")
+    @JsonAlias({"newAllocatedQuota", "allocatedQuota"})
     private Integer allocated;
 }

@@ -184,6 +184,7 @@ export class AdminUsersComponent implements OnInit {
       userId: this.adjustTargetUser.id,
       leaveTypeId: this.adjustData.leaveTypeId,
       year: this.adjustData.year,
+      allocated: this.adjustData.newAllocatedQuota,
       newAllocatedQuota: this.adjustData.newAllocatedQuota,
       reason: this.adjustData.reason
     };
