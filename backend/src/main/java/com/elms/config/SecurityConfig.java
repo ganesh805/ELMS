@@ -49,10 +49,13 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/v3/api-docs/**",
+                                "/v3/api-docs",
                                 "/api-docs/**",
                                 "/api-docs",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/swagger-resources/**",
+                                "/webjars/**"
                         ).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("HR_ADMIN")
                         .requestMatchers("/api/leaves/pending", "/api/leaves/team", "/api/leaves/*/approve", "/api/leaves/*/reject").hasAnyRole("MANAGER", "HR_ADMIN")
