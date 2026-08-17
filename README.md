@@ -6,17 +6,21 @@
 
 ## 📸 Application Screenshots & Visual Showcase
 
-### 1. Vista Tech Sign-In Screen
-![Vista Tech Login Screen](docs/images/login-screen.png)
+### 1. Sign-In Screen
+<img width="1913" height="964" alt="Screenshot 2026-08-17 090618" src="https://github.com/user-attachments/assets/82d21268-7c13-42e3-b952-2a2c6f6e952b" />
+
 
 ### 2. HR Admin Control Center & Quota Overview
-![HR Admin Dashboard](docs/images/hr-admin-dashboard.png)
+<img width="1914" height="966" alt="Screenshot 2026-08-17 090644" src="https://github.com/user-attachments/assets/5aeb9cff-8af7-44be-9ada-fcf48b5623df" />
 
-### 3. Line Manager Team Management Dashboard
-![Manager Dashboard](docs/images/manager-dashboard.png)
+
+### 3. Manager Dashboard
+<img width="1919" height="961" alt="Screenshot 2026-08-17 090715" src="https://github.com/user-attachments/assets/329cad9e-36ca-4710-96d5-23cdf6c36124" />
+
 
 ### 4. Interactive Working Day Leave Application Form
-![Apply Leave Form](docs/images/apply-leave-form.png)
+<img width="1914" height="952" alt="Screenshot 2026-08-17 090735" src="https://github.com/user-attachments/assets/6793b3d4-5a9c-4b9d-ace3-2c00329a46d5" />
+
 
 ---
 
